@@ -17,10 +17,6 @@ app.get("/", (req, res) => {
   res.status(200).send({ message: "Hello from the server" });
 });
 
-app.post("/", (req, res) => {
-  res.status(200).send({ message: "Hello from the post server" });
-});
-
 app.use("/api", apiRouter);
 
 

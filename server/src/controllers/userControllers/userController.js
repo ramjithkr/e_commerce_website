@@ -3,12 +3,13 @@ import bcrypt from "bcrypt";
 import { User } from "../../models/userModel.js";
 import { generateUserToken } from "../../utils/generateToken.js";
 import { loginFunction } from "../../utils/controllerFunction.js";
+ 
 
 export const userCreate = async (req, res) => {
   try {
     const { name, email, password, mobile, profilepic, product } = req.body;
     if (!name || !email || !password || !mobile) {
-      return res
+      return res  
         .status(400)
         .json({ success: false, message: "all fields required" });
     }
@@ -122,3 +123,4 @@ export const userLogout =  (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
