@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/productList",authUser,getProductList);
 
-router.post("/create",upload.single("image"),createProduct);
+router.post("/create",upload.single("image"),authAdmin,createProduct);
 
 router.put("/update/:id",authAdmin,updatedProduct);
 

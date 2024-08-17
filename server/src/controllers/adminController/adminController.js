@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { Admin } from "../../models/adminModels.js";
 import { generateAdminToken } from "./../../utils/genreateAdminToken.js";
 import { loginFunction } from "../../utils/controllerFunction.js";
-  
+
 export const adminCreate = async (req, res) => {
   try {
     const { name, email, password, mobile, profilepic, product } = req.body;
@@ -27,7 +27,7 @@ export const adminCreate = async (req, res) => {
       email: email,
       password: hashedPassword,
       mobile,
-      role : 'admin',
+      role: "admin",
       profilepic,
       product,
     });
@@ -108,12 +108,11 @@ export const checkAdmin = async (req, res) => {
   }
 };
 
-
-export const adminLogout =(req,res) => {
+export const adminLogout = (req, res) => {
   try {
-    res.clearCookies('token');
+    res.clearCookies("token");
   } catch (error) {
     console.error(error);
-    res.status(500).json({success:  false , message : "Internal server error" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
