@@ -24,7 +24,7 @@ router.post("/logout", adminLogout);
 
 router.get("/getUserlist")
 router.get("/singleUser")
-router.get("")
+router.get("/")
 
 router.get("/check-user", authAdmin, checkAdmin);
 
