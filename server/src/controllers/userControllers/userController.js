@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { User } from "../../models/userModel.js";
 import { generateUserToken } from "../../utils/generateToken.js";
 import { loginFunction } from "../../utils/controllerFunction.js";
+import { Cart } from "../../models/cartModel.js";
 
 export const userCreate = async (req, res) => {
   try {
@@ -112,7 +113,7 @@ export const checkUser = async (req, res) => {
   }
 };
 
-export const userLogout = (req, res) => {
+export const userLogout = async (req, res) => {
   try {
     console.log(token);
     res.clearCookies("token");
