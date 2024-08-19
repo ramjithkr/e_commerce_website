@@ -2,8 +2,8 @@ import bcrypt from "bcrypt";
 
 import { User } from "../../models/userModel.js";
 import { generateUserToken } from "../../utils/generateToken.js";
-import { loginFunction } from "../../utils/controllerFunction.js";
-import { Cart } from "../../models/cartModel.js";
+
+
 
 export const userCreate = async (req, res) => {
   try {
@@ -45,9 +45,13 @@ export const userCreate = async (req, res) => {
 
 export const userLogin = async (req, res) => {
   try {
-    //checking the emaile and password is required
+   
     const { email, password } = req.body;
-    loginFunction(email, password);
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "all fields required" });
+    }
 
     // checking the user is existing
     const userExists = await User.findOne({ email: email });
