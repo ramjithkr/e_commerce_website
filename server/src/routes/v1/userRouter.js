@@ -1,9 +1,6 @@
 import express from "express";
-const router = express.Router();
-
 import {
   checkUser,
-
   userCreate,
   userLogin,
   userLogout,
@@ -11,12 +8,13 @@ import {
 } from "../../controllers/userControllers/userController.js";
 import { authUser } from "../../middlewares/authUser.js";
 
+const router = express.Router();
 
 router.post("/create", userCreate);
 router.post("/login", userLogin);
 router.post("/profile/:id", authUser, userProfile);
-router.post("/logout", userLogout)
 router.get("/check-user", authUser, checkUser);
+router.post("/logout", userLogout);
 
 
 export default router;

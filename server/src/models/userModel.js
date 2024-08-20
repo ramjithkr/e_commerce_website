@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -12,26 +12,34 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     lowercase: true,
-    // Add more validation if needed, e.g., regex for email format
+
   },
   password: {
     type: String,
     required: true,
-    minlength: 6, // Ensure this meets your security requirements
+    minlength: 6,
   },
   mobile: {
     type: String,
     required: true,
-    // Consider adding validation for mobile number format
+  
   },
   profile: {
     type: String,
     default: 'https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png',
   },
-  products: [{
-    type: mongoose.Types.ObjectId,
-    ref: 'Product',
-  }],
+  wishlist: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Wishlist',
+    },
+  ],
+  products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+  ],
 }, {
   timestamps: true,
 });

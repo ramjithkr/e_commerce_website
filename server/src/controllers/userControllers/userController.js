@@ -3,8 +3,6 @@ import bcrypt from "bcrypt";
 import { User } from "../../models/userModel.js";
 import { generateUserToken } from "../../utils/generateToken.js";
 
-
-
 export const userCreate = async (req, res) => {
   try {
     const { name, email, password, mobile, profilepic, product } = req.body;
@@ -45,7 +43,6 @@ export const userCreate = async (req, res) => {
 
 export const userLogin = async (req, res) => {
   try {
-   
     const { email, password } = req.body;
     if (!email || !password) {
       return res
@@ -117,12 +114,11 @@ export const checkUser = async (req, res) => {
   }
 };
 
-export const userLogout = async (req, res) => {
+export const userLogout = (req, res) => {
   try {
-    console.log(token);
-    res.clearCookies("token");
-    res.json({ success: true, message: "user loged out" });
+    res.clearCookie("token");
+    return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ success: false, message: "Internal server error!!!" });
   }
 };

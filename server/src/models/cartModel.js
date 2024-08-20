@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 const cartSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Capitalized 'User'
+    ref: 'User',
     required: true,
   },
   products: [{
     product: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product', // Capitalized 'Product'
+      ref: 'Product', 
       required: true,
     },
     quantity: {
@@ -22,4 +22,4 @@ const cartSchema = new mongoose.Schema({
   timestamps: true, 
 });
 
-export const Cart = mongoose.model('Cart', cartSchema); // Capitalized 'Cart'
+export const Cart = mongoose.model('Cart', cartSchema);
