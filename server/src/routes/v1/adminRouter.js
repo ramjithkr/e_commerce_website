@@ -21,13 +21,11 @@ router.post("/login", adminLogin);
 router.post("/profile/:id", authAdmin, adminProfile);
 router.post("/logout", adminLogout);
 
-
-router.get("/getUserlist")
-router.get("/singleUser")
-router.get("/")
+router.get("/getUserlist");
+router.get("/singleUser");
+router.get("/");
 
 router.get("/check-user", authAdmin, checkAdmin);
-
 
 router.delete("/product/:productId/:id", authAdmin),
   async (req, res, next) => {
@@ -48,4 +46,5 @@ router.delete("/product/:productId/:id", authAdmin),
       console.log(error);
     }
   };
+
 export default router;

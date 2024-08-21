@@ -1,26 +1,21 @@
 import mongoose from "mongoose";
 import { User } from "../../models/userModel.js";
 import { Product } from "../../models/productModel.js";
-import { Wishlist } from "../../models/wishlistModel.js"; // Import the Wishlist model
-
-// Add a product to the wishlist
+import { Wishlist } from "../../models/wishlistModel.js";
 export const addToWishlist = async (req, res) => {
   try {
     const { id, productId } = req.body;
 
-    // Find the user
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the product exists
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Check if the product is already in the wishlist
     const existingWishlistItem = await Wishlist.findOne({
       user: id,
       product: productId,
@@ -29,7 +24,6 @@ export const addToWishlist = async (req, res) => {
       return res.status(400).json({ message: "Product already in wishlist" });
     }
 
-    // Create a new wishlist entry
     const wishlistItem = new Wishlist({
       user: id,
       product: productId,
@@ -44,12 +38,10 @@ export const addToWishlist = async (req, res) => {
   }
 };
 
-// Remove a product from the wishlist
 export const removeFromWishlist = async (req, res) => {
   try {
     const { id, productId } = req.params;
 
-    // Find the wishlist item
     const wishlistItem = await Wishlist.findOneAndDelete({
       user: id,
       product: productId,
@@ -61,7 +53,7 @@ export const removeFromWishlist = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Product removed from wishlist", wishlistItem });
+      .json({ message: "Product removed from wishlist", data: wishlistItem });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -73,22 +65,18 @@ export const getWishlist = async (req, res) => {
 
     console.log("Received parameters:", req.params);
 
-    // Validate the user ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
-    // Query the Wishlist
     const wishlist = await Wishlist.find({ user: id }).populate("product");
 
     console.log("Wishlist Query Result:", wishlist);
 
-    // Check if the wishlist is empty
     if (!wishlist || wishlist.length === 0) {
       return res.status(404).json({ message: "No items in wishlist" });
     }
 
-    // Send the response
     res.status(200).json({ wishlist });
   } catch (error) {
     console.error("Error in getWishlist:", error);

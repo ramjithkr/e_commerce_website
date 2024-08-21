@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 
-import { User } from "../../models/userModel.js";
 import { generateUserToken } from "../../utils/generateToken.js";
 
 export const userCreate = async (req, res) => {
@@ -50,7 +49,6 @@ export const userLogin = async (req, res) => {
         .json({ success: false, message: "all fields required" });
     }
 
-    // checking the user is existing
     const userExists = await User.findOne({ email: email });
 
     if (!userExists.email) {
@@ -119,6 +117,8 @@ export const userLogout = (req, res) => {
     res.clearCookie("token");
     return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error!!!" });
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error!!!" });
   }
 };

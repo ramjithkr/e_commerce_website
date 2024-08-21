@@ -1,49 +1,44 @@
+import mongoose from "mongoose";
+import { Rating } from "../../models/ratingModel.js";
+import { Product } from "../../models/productModel.js";
 
-import { Rating } from '../../models/ratingModel.js';
-import { Product } from './../../models/productModel.js';
-
-
-// Add or update rating for a product
 export const addOrUpdateRating = async (req, res) => {
   try {
-    const { productId, userId, rating, review } = req.body;
+    const { productId, id, rating, review } = req.body;
 
-    // Find if a rating by the user for the same product already exists
-    let existingRating = await Rating.findOne({ product: productId, user: userId });
+    let existingRating = await Rating.findOne({ productId, id });
 
     if (existingRating) {
-      // Update the existing rating
       existingRating.rating = rating;
       existingRating.review = review;
       await existingRating.save();
 
       return res.status(200).json({
         success: true,
-        message: 'Rating updated successfully',
+        message: "Rating updated successfully",
         data: existingRating,
       });
     } else {
-      // Create a new rating
       const newRating = new Rating({
-        user: userId,
-        product: productId,
+        id,
+        productId,
         rating,
         review,
       });
       await newRating.save();
 
-      // Optional: You can also update the product's average rating here
       const product = await Product.findById(productId);
       if (product) {
-        const ratings = await Rating.find({ product: productId });
-        const avgRating = ratings.reduce((acc, cur) => acc + cur.rating, 0) / ratings.length;
+        const ratings = await Rating.find({ productId });
+        const avgRating =
+          ratings.reduce((acc, cur) => acc + cur.rating, 0) / ratings.length;
         product.avgRating = avgRating;
         await product.save();
       }
 
       return res.status(201).json({
         success: true,
-        message: 'Rating added successfully',
+        message: "Rating added successfully",
         data: newRating,
       });
     }
@@ -51,33 +46,11 @@ export const addOrUpdateRating = async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
 
-// Get all ratings for a product
-export const getProductRatings = async (req, res) => {
-  try {
-    const { productId } = req.params;
-
-    const ratings = await Rating.find({ product: productId }).populate('user', 'name email');
-
-    res.status(200).json({
-      success: true,
-      message: 'Ratings fetched successfully',
-      data: ratings,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-    });
-  }
-};
-
-// Delete a rating
 export const deleteRating = async (req, res) => {
   try {
     const { ratingId } = req.params;
@@ -87,19 +60,61 @@ export const deleteRating = async (req, res) => {
     if (!deletedRating) {
       return res.status(404).json({
         success: false,
-        message: 'Rating not found',
+        message: "Rating not found",
       });
     }
+    const product = await Product.findById(deletedRating.productId);
+    if (product) {
+      const ratings = await Rating.find({ productId: deletedRating.productId });
+      if (ratings.length > 0) {
+        const avgRating =
+          ratings.reduce((acc, cur) => acc + cur.rating, 0) / ratings.length;
+        product.avgRating = avgRating;
+      } else {
+        product.avgRating = 0;
+      }
+      await product.save();
+    }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Rating deleted successfully',
+      message: "Rating deleted successfully",
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getProductRatings = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    const ratings = await Rating.find({ productId }).populate(
+      "id",
+      "name email profile"
+    );
+
+    if (ratings.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No ratings found for this product",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Ratings retrieved successfully",
+      data: ratings,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };

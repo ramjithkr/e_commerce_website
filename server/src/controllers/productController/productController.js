@@ -24,7 +24,7 @@ export const createProduct = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Image is required" });
     }
-    // Upload an image
+
     const product = await Product.findOne({ title: title });
 
     if (product) {
@@ -67,7 +67,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-export const  updatedProduct = async (req, res) => {
+export const updatedProduct = async (req, res) => {
   try {
     const { title, desc, image, brand, price, category, stock, ratings } =
       req.body;
