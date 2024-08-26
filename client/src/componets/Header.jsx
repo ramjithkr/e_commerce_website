@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CircleUserRound } from 'lucide-react';
+import { CircleUserRound } from "lucide-react";
 import DarkMode from "./ui/DarkMode";
 
 export const Header = () => {
@@ -21,6 +21,6 @@ export const Header = () => {
           <CircleUserRound size={30} />
         </div>
       </div>
-    </div>  
+    </div>
   );
 };

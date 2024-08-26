@@ -110,9 +110,14 @@ export const checkAdmin = async (req, res) => {
 
 export const adminLogout = (req, res) => {
   try {
-    res.clearCookies("token");
+    res.clearCookie("token");
+    return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error!!!" });
   }
 };
+
+
+export const getUsersList = (req, res) => {}

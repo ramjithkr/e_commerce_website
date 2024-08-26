@@ -25,7 +25,7 @@ export const createProduct = async (req, res) => {
         .json({ success: false, message: "Image is required" });
     }
 
-    const product = await Product.findOne({ title: title });
+    const product = await Product.findOne({ title: title }); 
 
     if (product) {
       return res

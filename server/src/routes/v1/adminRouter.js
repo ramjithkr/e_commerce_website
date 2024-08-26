@@ -1,10 +1,11 @@
 import e from "express";
 import {
-  // adminCreate,
+
   adminLogin,
   adminLogout,
   adminProfile,
   checkAdmin,
+  getUsersList,
 } from "../../controllers/adminController/adminController.js";
 import { authAdmin } from "../../middlewares/authAdmin.js";
 import { Admin } from "../../models/adminModels.js";
@@ -15,15 +16,13 @@ router.get("/", (req, res) => {
   res.status(200).send({ message: "Hello from the admin route" });
 });
 
-// router.post("/create", adminCreate);
 
 router.post("/login", adminLogin);
 router.post("/profile/:id", authAdmin, adminProfile);
-router.post("/logout", adminLogout);
+router.post("/logout",authAdmin, adminLogout);
+router.get("/getUserlist",authAdmin,getUsersList);
 
-router.get("/getUserlist");
 router.get("/singleUser");
-router.get("/");
 
 router.get("/check-user", authAdmin, checkAdmin);
 

@@ -15,6 +15,4 @@ router.post("/create", upload.single("image"), authAdmin, createProduct);
 
 router.put("/update/:id", authAdmin, updatedProduct);
 
-router.delete("/delete");
-
 export default router;
