@@ -20,7 +20,7 @@ export const addOrUpdateRating = async (req, res) => {
       });
     } else {
       const newRating = new Rating({
-        id,
+        id, 
         productId,
         rating,
         review,
@@ -94,7 +94,7 @@ export const getProductRatings = async (req, res) => {
     const { productId } = req.params;
 
     const ratings = await Rating.find({ productId }).populate(
-      "id",
+      "userId", 
       "name email profile"
     );
 

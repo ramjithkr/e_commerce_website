@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
-
 import { generateUserToken } from "../../utils/generateToken.js";
-import { User } from "../../models/userModel.js";
+
+import { cloudinaryInstance } from "../../config/cloudneryConfig.js";
+
+import { User } from "./../../models/userModel.js";
 
 export const userCreate = async (req, res) => {
   try {
@@ -9,27 +11,41 @@ export const userCreate = async (req, res) => {
     if (!name || !email || !password || !mobile) {
       return res
         .status(400)
-        .json({ success: false, message: "all fields required" });
+        .json({ success: false, message: "All fields are required" });
     }
 
     const userExists = await User.findOne({ email: email });
     if (userExists) {
       return res
         .status(404)
-        .json({ success: false, message: "User allredy exist" });
+        .json({ success: false, message: "User already exists" });
     }
 
     const saltRounds = 10;
     const hashedPassword = bcrypt.hashSync(password, saltRounds);
+
+    let finalProfilePic = profilepic;
+
+    // If no profile pic is provided, upload the default one to Cloudinary
+    if (!profilepic) {
+      const defaultImageUrl = process.env.defaultImageUrl;
+
+      const uploadResult = await cloudinaryInstance.uploader.upload(
+        defaultImageUrl,
+        { folder: "e_commerce_website" }
+      );
+      finalProfilePic = uploadResult.url;
+    }
 
     const newUser = new User({
       name: name,
       email: email,
       password: hashedPassword,
       mobile,
-      profilepic,
+      profilepic: finalProfilePic,
       product,
     });
+
     await newUser.save();
 
     const token = generateUserToken(email);
@@ -37,7 +53,7 @@ export const userCreate = async (req, res) => {
     res.cookie("token", token);
     res.json({ success: true, message: "User created successfully" });
   } catch (error) {
-    res.status(500).json({ message: " Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

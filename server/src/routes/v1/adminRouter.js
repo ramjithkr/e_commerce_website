@@ -1,49 +1,35 @@
-import e from "express";
+import express from "express"; // Use 'express' instead of 'e'
 import {
-
   adminLogin,
   adminLogout,
   adminProfile,
   checkAdmin,
+  deleteProduct,
+  getAllProducts,
+  getAllReviews,
+  getAllUsersCarts,
+  getSingleUser,
+  getSingleUserCart,
   getUsersList,
 } from "../../controllers/adminController/adminController.js";
 import { authAdmin } from "../../middlewares/authAdmin.js";
-import { Admin } from "../../models/adminModels.js";
-import { Product } from "./../../models/productModel.js";
-const router = e.Router();
+
+const router = express.Router();
 
 router.get("/", (req, res) => {
   res.status(200).send({ message: "Hello from the admin route" });
 });
 
-
 router.post("/login", adminLogin);
 router.post("/profile/:id", authAdmin, adminProfile);
-router.post("/logout",authAdmin, adminLogout);
-router.get("/getUserlist",authAdmin,getUsersList);
-
-router.get("/singleUser");
-
+router.post("/logout", authAdmin, adminLogout);
+router.get("/getUserlist", authAdmin, getUsersList);
+router.get("/singleUser/:id", authAdmin, getSingleUser);
+router.get("/getAllCarts", authAdmin, getAllUsersCarts);
+router.get("/getCart/:id", authAdmin, getSingleUserCart);
+router.get("/getAllProducts", authAdmin, getAllProducts);
+router.delete("/deleteProduct/:id", authAdmin, deleteProduct);
+router.get("/reviews", authAdmin, getAllReviews);
 router.get("/check-user", authAdmin, checkAdmin);
 
-router.delete("/product/:productId/:id", authAdmin),
-  async (req, res, next) => {
-    try {
-      const { id, ProductId } = req.params;
-
-      const admin = await Admin.findById(id);
-      const deleteProduct = await Product.findByIdAndDelete(ProductId);
-      if (!deleteProduct) {
-        return res
-          .status(404)
-          .json({ success: false, message: "product not found" });
-      }
-      res
-        .status(200)
-        .json({ success: true, message: "product deleted successfully" });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-export default router;
+export default router; 

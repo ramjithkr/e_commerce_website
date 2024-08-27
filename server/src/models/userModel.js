@@ -25,8 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     profile: {
       type: String,
-      default:
-        "https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png",
+      default: "https://www.pngitem.com/pimgs/m/30-307416_profile-icon-png-image-free-download-searchpng-employee.png",
     },
     wishlist: [
       {
@@ -42,7 +41,8 @@ const userSchema = new mongoose.Schema(
     ],
   },
   {
-    timestamps: true,
+    timestamps: true, // Automatically add createdAt and updatedAt fields
   }
 );
+
 export const User = mongoose.model("User", userSchema);

@@ -2,7 +2,9 @@ import bcrypt from "bcrypt";
 
 import { Admin } from "../../models/adminModels.js";
 import { generateAdminToken } from "./../../utils/genreateAdminToken.js";
-import { loginFunction } from "../../utils/controllerFunction.js";
+import { User } from "./../../models/userModel.js";
+import { Product } from "../../models/productModel.js";
+import { Rating } from "../../models/ratingModel.js";
 
 export const adminCreate = async (req, res) => {
   try {
@@ -45,33 +47,35 @@ export const adminCreate = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    loginFunction(email, password);
-
     const adminExists = await Admin.findOne({ email: email });
 
     if (!adminExists) {
       return res
         .status(400)
-        .json({ sucess: false, message: " admin not found" });
+        .json({ success: false, message: "Admin not found" });
     }
+
     const passwordMatch = bcrypt.compareSync(password, adminExists.password);
     if (!passwordMatch) {
       return res
         .status(400)
-        .json({ success: false, message: " admin not authenticate" });
+        .json({ success: false, message: "Admin not authenticated" });
     }
+
     const token = generateAdminToken(email);
 
     res.cookie("token", token);
     res
-      .status(201)
-      .json({ sucess: true, message: "admin Login  successfully" });
+      .status(200)
+      .json({ success: true, message: "Admin login successful", token });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error !!" });
   }
 };
 
@@ -119,5 +123,143 @@ export const adminLogout = (req, res) => {
   }
 };
 
+export const getUsersList = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
 
-export const getUsersList = (req, res) => {}
+    if (!users.length) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No users found" });
+    }
+
+    res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getSingleUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId).select("-password"); // Exclude password
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getAllUsersCarts = async (req, res) => {
+  try {
+    const users = await User.find()
+      .select("name email cart")
+      .populate("cart.productId", "title price");
+
+    if (!users || users.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No users found" });
+    }
+
+    const carts = users.map((user) => ({
+      name: user.name,
+      email: user.email,
+      cart: user.cart,
+    }));
+
+    res.status(200).json({ success: true, data: carts });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getSingleUserCart = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(userId)
+      .select("name email cart")
+      .populate("cart.productId", "title price");
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, data: user.cart });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find()
+      .populate("category", "name")
+      .populate("brand", "name");
+
+    if (!products || products.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No products found" });
+    }
+
+    res.status(200).json({ success: true, data: products });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getAllReviews = async (req, res) => {
+  try {
+    const reviews = await Rating.find().populate("productId", "title");
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No reviews found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "All reviews fetched successfully",
+      data: reviews,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
