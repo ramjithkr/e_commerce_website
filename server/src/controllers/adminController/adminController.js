@@ -5,48 +5,44 @@ import { generateAdminToken } from "./../../utils/genreateAdminToken.js";
 import { User } from "./../../models/userModel.js";
 import { Product } from "../../models/productModel.js";
 import { Rating } from "../../models/ratingModel.js";
+import { Cart } from "./../../models/cartModel.js";
 
-export const adminCreate = async (req, res) => {
-  try {
-    const { name, email, password, mobile, profilepic, product } = req.body;
-    if ((!name || !email || !password, !mobile)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "all fields are required" });
-    }
-    const adminExist = await Admin.findOne({ email: email });
-    if (adminExist) {
-      return res
-        .status(404)
-        .json({ success: false, message: "admin allredy exist" });
-    }
+// export const adminCreate = async (req, res) => {
+//   try {
+//     const { name, email, password, mobile, profilepic, product } = req.body;
+//     if (!name || !email || !password || !mobile) {
+//       return res.status(400).json({ success: false, message: "All fields are required" });
+//     }
+//     const adminExist = await Admin.findOne({ email: email });
+//     if (adminExist) {
+//       return res.status(404).json({ success: false, message: "Admin already exists" });
+//     }
 
-    const saltRound = 10;
-    const hashedPassword = bcrypt.hashSync(password, saltRound);
+//     const saltRound = 10;
+//     const hashedPassword = bcrypt.hashSync(password, saltRound);
 
-    const newAdmin = new Admin({
-      name: name,
-      email: email,
-      password: hashedPassword,
-      mobile,
-      role: "admin",
-      profilepic,
-      product,
-    });
+//     const newAdmin = new Admin({
+//       name: name,
+//       email: email,
+//       password: hashedPassword,
+//       mobile,
+//       role: "admin",
+//       profilepic,
+//       product,
+//     });
 
-    await newAdmin.save();
+//     await newAdmin.save();
 
-    const token = generateAdminToken(email);
+//     const token = generateAdminToken(email);
 
-    res.cookie("token", token);
-    res
-      .status(201)
-      .json({ success: true, message: "admin created successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
-};
+//     res.cookie("token", token);
+//     res.status(201).json({ success: true, message: "Admin created successfully" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// };
+
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -68,9 +64,7 @@ export const adminLogin = async (req, res) => {
     const token = generateAdminToken(email);
 
     res.cookie("token", token);
-    res
-      .status(200)
-      .json({ success: true, message: "Admin login successful", token });
+    res.status(200).json({ success: true, message: "Admin login successful" });
   } catch (error) {
     console.error(error);
     res
@@ -87,11 +81,11 @@ export const adminProfile = async (req, res) => {
     if (!adminData) {
       return res
         .status(400)
-        .json({ success: false, message: " admin not found" });
+        .json({ success: false, message: "Admin not found" });
     }
     res
       .status(200)
-      .json({ success: true, message: " admin data fetched", data: adminData });
+      .json({ success: true, message: "Admin data fetched", data: adminData });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -99,23 +93,23 @@ export const adminProfile = async (req, res) => {
 };
 
 export const checkAdmin = async (req, res) => {
-  const admin = req.admin;
-  if (!admin) {
-    return res
-      .status(400)
-      .json({ success: false, message: "admin not authericated" });
-  }
   try {
+    const admin = req.admin;
+    if (!admin) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Admin not authenticated" });
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ sucess: false, message: "Internal server error" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
 export const adminLogout = (req, res) => {
   try {
     res.clearCookie("token");
-    return res.status(200).json({ message: "Logout successfully" });
+    return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     res
       .status(500)
@@ -143,7 +137,7 @@ export const getUsersList = async (req, res) => {
 export const getSingleUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById(userId).select("-password"); // Exclude password
+    const user = await User.findById(userId).select("-password");
 
     if (!user) {
       return res
@@ -161,7 +155,7 @@ export const getAllUsersCarts = async (req, res) => {
   try {
     const users = await User.find()
       .select("name email cart")
-      .populate("cart.productId", "title price");
+      .populate("cart.items.product", "title price");
 
     if (!users || users.length === 0) {
       return res
@@ -177,6 +171,7 @@ export const getAllUsersCarts = async (req, res) => {
 
     res.status(200).json({ success: true, data: carts });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -185,7 +180,7 @@ export const getSingleUserCart = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(userId)
+    const user = await User.findById(id)
       .select("name email cart")
       .populate("cart.productId", "title price");
 
@@ -203,9 +198,7 @@ export const getSingleUserCart = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find()
-      .populate("category", "name")
-      .populate("brand", "name");
+    const products = await Product.find();
 
     if (!products || products.length === 0) {
       return res
@@ -244,10 +237,9 @@ export const getAllReviews = async (req, res) => {
     const reviews = await Rating.find().populate("productId", "title");
 
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No reviews found",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "No reviews found" });
     }
 
     res.status(200).json({
@@ -257,9 +249,6 @@ export const getAllReviews = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

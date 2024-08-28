@@ -20,7 +20,8 @@ const adminSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: "admin",
+      enum: ["admin"], // Enum should be an array of values
+      default: "admin",
     },
     productId: {
       type: mongoose.Schema.Types.ObjectId,
