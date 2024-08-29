@@ -1,12 +1,15 @@
-import { Outlet } from "react-router-dom";
 import { Footer } from "../componets/Footer";
-import { Header } from "../componets/Header";
+import { UserHeader } from "../componets/user/UserHeader";
+import { Outlet } from "react-router-dom";  
 
-export const RootLayout = () => {
+export const UserLayout = () => {
   return (
     <div>
-      <Header />
+      <UserHeader />
+      <div className="min-h-96">
       <Outlet />
+      </div>
+
       <Footer />
     </div>
   );

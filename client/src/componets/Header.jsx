@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { CircleUserRound, BookHeart, ShoppingCart } from "lucide-react";
 import DarkMode from "./ui/DarkMode";
 
 export const Header = () => {
@@ -21,14 +20,11 @@ export const Header = () => {
         <Link to={"/products"} className="hover:text-blue-500">
           Products
         </Link>
-     
       </nav>
-      <div className="flex items-center gap-10">
+      <div className="flex items-center gap-5">
         <DarkMode />
         <div className="flex items-center gap-4">
-          <BookHeart size={24} className="hover:text-blue-500 cursor-pointer" />
-          <CircleUserRound size={24} className="hover:text-blue-300 cursor-pointer" />
-          <ShoppingCart size={24} className="hover:text-blue-300 cursor-pointer" />
+          <button className="btn btn-primary">Join us</button>
         </div>
       </div>
     </div>
