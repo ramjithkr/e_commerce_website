@@ -11,9 +11,7 @@ export const Header = () => {
         <Link to="/" className="hover:text-blue-500 font-sans">
           Home
         </Link>
-        <Link to="/user/collections" className="hover:text-blue-500 font-sans">
-          Collections
-        </Link>
+      
         <Link to="/about" className="hover:text-blue-500 font-sans">
           About
         </Link>
@@ -24,7 +22,11 @@ export const Header = () => {
       <div className="flex items-center gap-5">
         <DarkMode />
         <div className="flex items-center gap-4">
-           <button className="btn btn-primary hover:text-blue-300 cursor-pointer">Join us</button>
+          <Link to={"/signup"}>
+            <button className="btn btn-primary hover:text-blue-300 cursor-pointer">
+              Join us
+            </button>
+          </Link>
         </div>
       </div>
     </div>

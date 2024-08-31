@@ -9,6 +9,8 @@ import { ErrorPage } from "../pages/errorPage/ErrorPage";
 import { ContactUs } from "../pages/web/ContactUs";
 import { About } from "../pages/web/about";
 import { WishlistPage } from "../pages/user/WishlistPage";
+import { UserProfile } from "../pages/user/UserProfile";
+import { CartPage } from "../pages/user/CartPage";
 
 export const router = createBrowserRouter([
   {
@@ -27,10 +29,6 @@ export const router = createBrowserRouter([
       {
         path: "contact", 
         element: <ContactUs/>
-      },
-      {
-        path: "collections",
-        element: <h1>Collections Page</h1>,
       },
       {
         path: "login", 
@@ -65,6 +63,14 @@ export const router = createBrowserRouter([
       {
         path: "wishlist", 
         element: <WishlistPage/>,
+      },
+      {
+        path: "profile", 
+        element: <UserProfile/>,
+      },
+      {
+        path: "cart", 
+        element: <CartPage/>,
       },
     ],
   },

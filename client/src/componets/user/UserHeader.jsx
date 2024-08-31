@@ -18,10 +18,10 @@ export const UserHeader = () => {
         >
           Collections
         </Link>
-        <Link to={"/about"} className="hover:text-blue-500 font-sans">
+        <Link to={"/user/about"} className="hover:text-blue-500 font-sans">
           About
         </Link>
-        <Link to={"/contact"} className="hover:text-blue-500 font-sans">
+        <Link to={"/user/contact"} className="hover:text-blue-500 font-sans">
           Contact
         </Link>
       </nav>
@@ -34,14 +34,19 @@ export const UserHeader = () => {
               className="hover:text-blue-500 cursor-pointer"
             />
           </Link>
-          <CircleUserRound
-            size={24}
-            className="hover:text-blue-300 cursor-pointer"
-          />
-          <ShoppingCart
-            size={24}
-            className="hover:text-blue-300 cursor-pointer"
-          />
+          <Link to={"/user/profile"}>
+            {" "}
+            <CircleUserRound
+              size={24}
+              className="hover:text-blue-300 cursor-pointer"
+            />
+          </Link>
+          <Link to={"/user/cart"}>
+            <ShoppingCart
+              size={24}
+              className="hover:text-blue-300 cursor-pointer"
+            />
+          </Link>
         </div>
       </div>
     </div>
