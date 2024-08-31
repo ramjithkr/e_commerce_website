@@ -8,23 +8,23 @@ export const Header = () => {
         <h1 className="text-2xl md:text-4xl font-bold">Logo</h1>
       </div>
       <nav className="hidden md:flex gap-4 md:gap-10 font-semibold">
-        <Link to={"/"} className="hover:text-blue-500 font-sans">
+        <Link to="/" className="hover:text-blue-500 font-sans">
           Home
         </Link>
-        <Link to={"/collections"} className="hover:text-blue-500 font-sans">
+        <Link to="/user/collections" className="hover:text-blue-500 font-sans">
           Collections
         </Link>
-        <Link to={"/about"} className="hover:text-blue-500 font-sans">
+        <Link to="/about" className="hover:text-blue-500 font-sans">
           About
         </Link>
-        <Link to={"/contact"} className="hover:text-blue-500 font-sans">
+        <Link to="/contact" className="hover:text-blue-500 font-sans">
           Contact
         </Link>
       </nav>
       <div className="flex items-center gap-5">
         <DarkMode />
         <div className="flex items-center gap-4">
-          <button className="btn btn-primary">Join us</button>
+           <button className="btn btn-primary hover:text-blue-300 cursor-pointer">Join us</button>
         </div>
       </div>
     </div>

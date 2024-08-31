@@ -12,7 +12,10 @@ export const UserHeader = () => {
         <Link to={"/"} className="hover:text-blue-500 font-sans">
           Home
         </Link>
-        <Link to={"/collections"} className="hover:text-blue-500 font-sans">
+        <Link
+          to={"/user/collections"}
+          className="hover:text-blue-500 font-sans"
+        >
           Collections
         </Link>
         <Link to={"/about"} className="hover:text-blue-500 font-sans">
@@ -25,7 +28,12 @@ export const UserHeader = () => {
       <div className="flex items-center gap-5">
         <DarkMode />
         <div className="flex items-center gap-4">
-          <BookHeart size={24} className="hover:text-blue-500 cursor-pointer" />
+          <Link to={"/user/wishlist"}>
+            <BookHeart
+              size={24}
+              className="hover:text-blue-500 cursor-pointer"
+            />
+          </Link>
           <CircleUserRound
             size={24}
             className="hover:text-blue-300 cursor-pointer"

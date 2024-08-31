@@ -6,6 +6,9 @@ import { SignupPage } from "./../pages/user/SignupPage";
 import { UserLayout } from "../layouts/UserLayout";
 import { ProductDetails } from "../pages/user/ProductDetails";
 import { ErrorPage } from "../pages/errorPage/ErrorPage";
+import { ContactUs } from "../pages/web/ContactUs";
+import { About } from "../pages/web/about";
+import { WishlistPage } from "../pages/user/WishlistPage";
 
 export const router = createBrowserRouter([
   {
@@ -14,27 +17,27 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        path: "", // Root homepage
+        path: "", 
         element: <HomePage />,
       },
       {
-        path: "about", // About page at root
-        element: <h1>About Page</h1>,
+        path: "about", 
+        element: <About/>
       },
       {
-        path: "contact", // Contact page at root
-        element: <h1>Contact Page</h1>,
+        path: "contact", 
+        element: <ContactUs/>
       },
       {
-        path: "collections", // Products page at root
+        path: "collections",
         element: <h1>Collections Page</h1>,
       },
       {
-        path: "login", // Login page at root
+        path: "login", 
         element: <LoginPage />,
       },
       {
-        path: "signup", // Signup page at root
+        path: "signup", 
         element: <SignupPage />,
       },
     ],
@@ -44,20 +47,24 @@ export const router = createBrowserRouter([
     element: <UserLayout />,
     children: [
       {
-        path: "about", // About page under user context
-        element: <h1>About Page for User</h1>,
+        path: "about", 
+        element: <About/>
       },
       {
-        path: "contact", // Contact page under user context
-        element: <h1>Contact Page for User</h1>,
+        path: "contact",
+        element: <ContactUs/>
       },
       {
-        path: "collections", // Products page under user context
+        path: "collections", 
         element: <h1>User Collections Page</h1>,
       },
       {
-        path: "product-details/:id", // Product details for a specific product under user context
+        path: "product-details/:id", 
         element: <ProductDetails />,
+      },
+      {
+        path: "wishlist", 
+        element: <WishlistPage/>,
       },
     ],
   },
