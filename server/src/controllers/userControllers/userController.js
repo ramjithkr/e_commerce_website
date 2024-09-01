@@ -63,12 +63,12 @@ export const userLogin = async (req, res) => {
     if (!email || !password) {
       return res
         .status(400)
-        .json({ success: false, message: "all fields required" });
+        .json({ success: false, message: "All fields are required" });
     }
 
-    const userExists = await User.findOne({ email: email });
+    const userExists = await User.findOne({ email });
 
-    if (!userExists.email) {
+    if (!userExists) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
@@ -77,14 +77,16 @@ export const userLogin = async (req, res) => {
     const passwordMatch = bcrypt.compareSync(password, userExists.password);
     if (!passwordMatch) {
       return res
-        .status(400)
-        .json({ success: false, message: "user not authenticate" });
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
-    const token = generateUserToken(email);
+    const token = generateUserToken(userExists.email); // Generate token using user's email
 
-    res.cookie("token", token);
-    res.status(201).json({ success: true, message: "User Login successfully" });
+    res.cookie("token", token, { httpOnly: true }); // Secure the cookie with httpOnly flag
+    return res
+      .status(200)
+      .json({ success: true, message: "User logged in successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal server error" });

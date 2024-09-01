@@ -1,54 +1,106 @@
-import { Link } from "react-router-dom";
+/* eslint-disable react/no-unescaped-entities */
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { userLogin } from "../../services/userApi";
+
 export const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const navigate = useNavigate();
+
+  const handleLogin = async (data) => {
+    try {
+     
+      const response = await userLogin(data);
+      if (!response.data.success) {
+        toast.success("Invalid email or password");
+        return;
+      }
+      toast.success(" Log in successfully");
+      navigate("/");
+    } catch (error) {
+      toast.success(" Log in failed:");
+      console.error("Login failed:", error);
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-      <div className="flex flex-col lg:flex-row items-center lg:justify-between bg-gray-800 p-10 rounded-lg shadow-xl w-full max-w-4xl">
-        <div className="mb-8 lg:mb-0 lg:mr-10">
-          <h1 className="text-4xl font-bold mb-4">Login now!</h1>
-          <p className="text-lg text-gray-300">
-            Welcome back! Please login to your account.
-          </p>
-        </div>
-        <div className="bg-gray-700 p-8 rounded-lg shadow-lg w-full max-w-sm">
-          <form>
-            <div className="mb-6">
-              <label className="block text-gray-300 mb-2" htmlFor="email">
-                Email
+    <div className="hero bg-base-200 min-h-screen flex items-center justify-center">
+      <div className="hero-content flex-col lg:flex-row-reverse w-full max-w-6xl">
+        <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl lg:ml-12">
+          <form className="card-body" onSubmit={handleSubmit(handleLogin)}>
+            <h2 className="text-4xl font-bold text-center mb-6">Login</h2>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email</span>
               </label>
               <input
                 type="email"
-                id="email"
-                className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Email"
-                required
+                placeholder="Enter your email"
+                className="input input-bordered"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                    message: "Please enter a valid email address",
+                  },
+                })}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
-            <div className="mb-6">
-              <label className="block text-gray-300 mb-2" htmlFor="password">
-                Password
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
               </label>
               <input
                 type="password"
-                id="password"
-                className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Password"
-                required
+                placeholder="Enter your password"
+                className="input input-bordered"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters long",
+                  },
+                })}
               />
-              <div className="text-right mt-2">
-                <Link to={"/signup"}>
-                <a
-                
-                  className="text-sm text-purple-400 hover:text-purple-500"
-                >
-                  New User ?
-                </a></Link>
-               
-              </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.password.message}
+                </p>
+              )}
+              <label className="label mt-4">
+                <span className="label-text-alt">
+                  Don't have an account?{" "}
+                  <Link to="/signup" className="link link-hover text-primary">
+                    Sign up here
+                  </Link>
+                </span>
+              </label>
             </div>
-            <button className="w-full py-3 mt-4 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500">
-              Login
-            </button>
+            <div className="form-control mt-6">
+              <button className="btn btn-primary w-full" type="submit">
+                Login
+              </button>
+            </div>
           </form>
+        </div>
+
+        {/* Welcome Text on the Left */}
+        <div className="text-center lg:text-left">
+          <h1 className="text-5xl font-bold">Welcome Back!</h1>
+          <p className="py-6 text-lg">
+            We're happy to see you again. Log in to access your account and
+            continue where you left off.
+          </p>
         </div>
       </div>
     </div>

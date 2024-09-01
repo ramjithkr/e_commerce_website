@@ -12,17 +12,18 @@ export const UserHeader = () => {
         <Link to={"/"} className="hover:text-blue-500 font-sans">
           Home
         </Link>
-        <Link
-          to={"/user/collections"}
-          className="hover:text-blue-500 font-sans"
-        >
-          Collections
-        </Link>
+
         <Link to={"/user/about"} className="hover:text-blue-500 font-sans">
           About
         </Link>
         <Link to={"/user/contact"} className="hover:text-blue-500 font-sans">
           Contact
+        </Link>
+        <Link
+          to={"/user/collections"}
+          className="hover:text-blue-500 font-sans"
+        >
+          Collections
         </Link>
       </nav>
       <div className="flex items-center gap-5">

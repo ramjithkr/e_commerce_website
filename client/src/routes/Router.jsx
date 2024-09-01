@@ -11,6 +11,7 @@ import { About } from "../pages/web/about";
 import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserProfile } from "../pages/user/UserProfile";
 import { CartPage } from "../pages/user/CartPage";
+import { UserAuth } from "./protectedRoutes/UserAuth";
 
 export const router = createBrowserRouter([
   {
@@ -19,58 +20,62 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        path: "", 
+        path: "",
         element: <HomePage />,
       },
       {
-        path: "about", 
-        element: <About/>
+        path: "about",
+        element: <About />,
       },
       {
-        path: "contact", 
-        element: <ContactUs/>
+        path: "contact",
+        element: <ContactUs />,
       },
       {
-        path: "login", 
+        path: "login",
         element: <LoginPage />,
       },
       {
-        path: "signup", 
+        path: "signup",
         element: <SignupPage />,
       },
     ],
   },
   {
-    path: "/user",
-    element: <UserLayout />,
+    path: "user",
+    element: (
+      <UserAuth>
+        <UserLayout />
+      </UserAuth>
+    ),
     children: [
       {
-        path: "about", 
-        element: <About/>
+        path: "about",
+        element: <About />,
       },
       {
         path: "contact",
-        element: <ContactUs/>
+        element: <ContactUs />,
       },
       {
-        path: "collections", 
+        path: "collections",
         element: <h1>User Collections Page</h1>,
       },
       {
-        path: "product-details/:id", 
+        path: "product-details/:id",
         element: <ProductDetails />,
       },
       {
-        path: "wishlist", 
-        element: <WishlistPage/>,
+        path: "wishlist",
+        element: <WishlistPage />,
       },
       {
-        path: "profile", 
-        element: <UserProfile/>,
+        path: "profile",
+        element: <UserProfile />,
       },
       {
-        path: "cart", 
-        element: <CartPage/>,
+        path: "cart",
+        element: <CartPage />,
       },
     ],
   },

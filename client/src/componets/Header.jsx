@@ -18,6 +18,12 @@ export const Header = () => {
         <Link to="/contact" className="hover:text-blue-500 font-sans">
           Contact
         </Link>
+        <Link
+          to={"/user/collections"}
+          className="hover:text-blue-500 font-sans"
+        >
+          Collections
+        </Link>
       </nav>
       <div className="flex items-center gap-5">
         <DarkMode />

@@ -1,67 +1,129 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+
 export const SignupPage = () => {
+  const [showPopup, setShowPopup] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formValid, setFormValid] = useState(true);
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setFormValid(false);
+      return;
+    }
+    setFormValid(true);
+    setShowPopup(true);
+  };
+
+  useEffect(() => {
+    if (showPopup) {
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showPopup]);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-      <div className="flex flex-col lg:flex-row items-center lg:justify-between bg-gray-800 p-10 rounded-lg shadow-xl w-full max-w-4xl">
-        <div className="mb-8 lg:mb-0 lg:mr-10">
-          <h1 className="text-4xl font-bold mb-4">Sign up !</h1>
-          <p className="text-lg text-gray-300">
-            Welcome back! Please login to your account.
-          </p>
-        </div>
-        <div className="bg-gray-700 p-8 rounded-lg shadow-lg w-full max-w-sm">
-          <form>
-          <div className="mb-6">
-              <label className="block text-gray-300 mb-2" htmlFor="name">
-                Name
+    <div className="hero bg-base-200 min-h-screen flex items-center justify-center">
+      <div className="hero-content flex-col lg:flex-row-reverse w-full max-w-6xl">
+        {/* Sign Up Form on the Right */}
+        <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl lg:ml-12">
+          <form className="card-body" onSubmit={handleSignup}>
+            <h2 className="text-4xl font-bold text-center mb-6">Sign Up</h2>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Name</span>
               </label>
               <input
                 type="text"
-                id="name"
-                className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Name"
+                placeholder="Enter your Name"
+                className="input input-bordered"
                 required
               />
             </div>
-            <div className="mb-6">
-              <label className="block text-gray-300 mb-2" htmlFor="email">
-                Email
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email</span>
               </label>
               <input
                 type="email"
-                id="email"
-                className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Email"
+                placeholder="Enter your email"
+                className="input input-bordered"
                 required
               />
             </div>
-            <div className="mb-6">
-              <label className="block text-gray-300 mb-2" htmlFor="password">
-                Password
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
               </label>
               <input
                 type="password"
-                id="password"
-                className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Password"
+                placeholder="Enter your password"
+                className="input input-bordered"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <div className="text-right mt-2">
-                <Link to={"/login"}>
-                  <a
-                    className="text-sm text-purple-400 hover:text-purple-500"
-                  >
-                    Existing User ?
-                  </a>
-                </Link>
-              </div>
             </div>
-            <button className="w-full py-3 mt-4 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500">
-              Login
-            </button>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Confirm Password</span>
+              </label>
+              <input
+                type="password"
+                placeholder="Confirm your password"
+                className="input input-bordered"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+              {!formValid && (
+                <p className="text-red-500 text-sm mt-2">Passwords do not match.</p>
+              )}
+            </div>
+            <div className="form-control mt-6">
+              <button className="btn btn-primary w-full" type="submit">
+                Sign Up
+              </button>
+            </div>
+            <div className="form-control mt-4 text-center">
+              <span className="text-sm">
+                Already have an account?{" "}
+                <Link to="/login" className="link link-hover text-primary">
+                  Login here
+                </Link>
+              </span>
+            </div>
           </form>
         </div>
+
+        {/* Welcome Text on the Left */}
+        <div className="text-center lg:text-left">
+          <h1 className="text-5xl font-bold">Join Us Today!</h1>
+          <p className="py-6 text-lg">
+            Create an account to start your journey with us.
+          </p>
+        </div>
       </div>
+
+      {/* Animated Popup */}
+      <AnimatePresence>
+        {showPopup && (
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50"
+          >
+            <h2 className="text-xl font-semibold">Signup Successful</h2>
+            <p className="text-sm">Your account has been created successfully.</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
