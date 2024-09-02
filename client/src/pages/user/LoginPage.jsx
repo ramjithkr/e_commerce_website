@@ -14,16 +14,16 @@ export const LoginPage = () => {
 
   const handleLogin = async (data) => {
     try {
-     
       const response = await userLogin(data);
-      if (!response.data.success) {
-        toast.success("Invalid email or password");
-        return;
+
+      if (response && response.success) { // Assuming `success` is a key in your response indicating login success
+        toast.success("Login successful");
+        navigate("/");
+      } else {
+        toast.error(response?.message || "Login failed");
       }
-      toast.success(" Log in successfully");
-      navigate("/");
     } catch (error) {
-      toast.success(" Log in failed:");
+      toast.error("Login failed: User not found or incorrect password");
       console.error("Login failed:", error);
     }
   };

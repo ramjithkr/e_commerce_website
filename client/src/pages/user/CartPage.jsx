@@ -1,6 +1,6 @@
 
 export const CartPage = () => {
   return (
-    <div>CartPage</div>
+    <div>CartPage    lodingg</div>
   )
 }
