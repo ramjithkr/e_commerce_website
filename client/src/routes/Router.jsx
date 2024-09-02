@@ -12,6 +12,7 @@ import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserProfile } from "../pages/user/UserProfile";
 import { CartPage } from "../pages/user/CartPage";
 import { UserAuth } from "./protectedRoutes/UserAuth";
+import { AdminLayout } from "../layouts/AdminLayout";
 
 export const router = createBrowserRouter([
   {
@@ -50,14 +51,6 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "about",
-        element: <About />,
-      },
-      {
-        path: "contact",
-        element: <ContactUs />,
-      },
-      {
         path: "collections",
         element: <h1>User Collections Page</h1>,
       },
@@ -78,5 +71,16 @@ export const router = createBrowserRouter([
         element: <CartPage />,
       },
     ],
+  },
+  {
+    path: "admin",
+    element: (
+      <UserAuth>
+        <AdminLayout />
+      </UserAuth>
+    ),
+    children: [(
+      
+    )],
   },
 ]);

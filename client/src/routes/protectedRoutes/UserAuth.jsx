@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { axiosInstance } from "./../../config/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 export const UserAuth = ({ children }) => {
+  const navgate = useNavigate();
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -10,16 +12,16 @@ export const UserAuth = ({ children }) => {
           method: "GET",
           withCredentials: true,
         });
-        console.log(response, "=====response");
+        // console.log(response, "=====response");
         return response?.data;
-        
       } catch (error) {
-        console.error("Authentication check failed:", error);
+        navgate("/login");
+        console.error("Authentication check failed:",error);
       }
     };
 
     checkUser();
-  }, []);
+  });
 
-  return children;
+  return children; 
 };

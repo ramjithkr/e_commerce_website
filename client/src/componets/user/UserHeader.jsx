@@ -13,10 +13,10 @@ export const UserHeader = () => {
           Home
         </Link>
 
-        <Link to={"/user/about"} className="hover:text-blue-500 font-sans">
+        <Link to={"/about"} className="hover:text-blue-500 font-sans">
           About
         </Link>
-        <Link to={"/user/contact"} className="hover:text-blue-500 font-sans">
+        <Link to={"/contact"} className="hover:text-blue-500 font-sans">
           Contact
         </Link>
         <Link
