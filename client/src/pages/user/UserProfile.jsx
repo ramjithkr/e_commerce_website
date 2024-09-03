@@ -1,30 +1,50 @@
-
+import { useNavigate } from "react-router-dom";
+import { fetchUserProfile, userLogout } from "../../services/userApi";
+import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 
 export const UserProfile = () => {
-  const handleLogout = () => {
-    // Add your logout logic here
-    console.log("User logged out");
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const response = await userLogout();
+    if (response) {
+      toast.success("Logout successful");
+      navigate("/");
+    }
   };
 
+  useEffect(() => {
+    fetchUserProfile(setUser);
+  }, []);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
-        <div className="flex justify-center mb-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <div className="flex justify-center mb-6">
           <img
-            src="https://via.placeholder.com/150"
+            src={user.profile}
             alt="User Avatar"
-            className="w-24 h-24 rounded-full shadow-md"
+            className="w-32 h-32 rounded-full shadow-md object-cover"
           />
         </div>
-        <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">John Doe</h2>
-        <p className="text-center text-gray-600 mb-4">johndoe@example.com</p>
-        <div className="flex justify-between items-center space-x-4">
-          <button className="btn btn-primary w-1/2">
+        <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">
+          Welcome, {user.name}
+        </h2>
+        <p className="text-center text-gray-600 mb-2">
+          <span className="font-semibold">Email:</span> {user.email}
+        </p>
+        <p className="text-center text-gray-600 mb-4">
+          <span className="font-semibold">Mobile:</span> {user.mobile}
+        </p>
+        <div className="flex flex-col gap-4">
+          <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
             Edit Profile
           </button>
           <button
+            className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
             onClick={handleLogout}
-            className="btn btn-secondary w-1/2 bg-red-600 hover:bg-red-700 text-white"
           >
             Logout
           </button>

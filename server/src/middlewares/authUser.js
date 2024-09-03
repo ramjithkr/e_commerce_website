@@ -6,18 +6,22 @@ export const authUser = (req, res, next) => {
 
     if (!token) {
       return res
-        .status(401)
-        .json({ success: false, message: "Unauthorized access, no token provided" });
+        .status(400)
+        .json({ success: false, message: "user not authenticated" });
     }
 
     const tokenVerified = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
+    if (!tokenVerified) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user not authenticated" });
+    }
+
     req.user = tokenVerified;
+
     next();
   } catch (error) {
-    console.error("Token verification error:", error.message);
-    return res
-      .status(401)
-      .json({ success: false, message: "Unauthorized access, invalid token" });
+    console.log(error);
   }
 };

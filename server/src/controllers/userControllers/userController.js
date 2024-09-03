@@ -93,26 +93,20 @@ export const userLogin = async (req, res) => {
   }
 };
 
-export const userProfile = async (req, res) => {
+
+export const userProfile = async (req, res, next) => {
   try {
-    const { id } = req.params;
+      const user = req.user;
+      // const id = req.id 
+      const useData = await User.findOne({ email: user.email }).select("-password");
+      // const useData = await User.findById(id).select("-password");
 
-    const userData = await User.findById(id);
-
-    if (!userData) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
-    res
-      .status(200)
-      .json({ success: true, message: "User data fetched", data: userData });
+      res.json({ success: true, message: "user data fetched", data: useData });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+      res.status(error.status || 500).json({ message: error.message || "Internal server error" });
   }
 };
+
 
 export const checkUser = async (req, res) => {
   try {
@@ -141,4 +135,3 @@ export const userLogout = (req, res) => {
       .json({ success: false, message: "Internal server error!!!" });
   }
 };
-  

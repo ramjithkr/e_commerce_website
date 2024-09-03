@@ -9,14 +9,14 @@ export const UserHeader = () => {
         <h1 className="text-2xl md:text-4xl font-bold">Logo</h1>
       </div>
       <nav className="hidden md:flex gap-4 md:gap-10 font-semibold">
-        <Link to={"/"} className="hover:text-blue-500 font-sans">
+        <Link to={"/user/home"} className="hover:text-blue-500 font-sans">
           Home
         </Link>
 
-        <Link to={"/about"} className="hover:text-blue-500 font-sans">
+        <Link to={"/user/about"} className="hover:text-blue-500 font-sans">
           About
         </Link>
-        <Link to={"/contact"} className="hover:text-blue-500 font-sans">
+        <Link to={"/user/contact"} className="hover:text-blue-500 font-sans">
           Contact
         </Link>
         <Link
