@@ -75,12 +75,15 @@ export const router = createBrowserRouter([
   {
     path: "admin",
     element: (
-      <UserAuth>
-        <AdminLayout />
-      </UserAuth>
+      // <UserAuth>
+      <AdminLayout />
+      // </UserAuth>
     ),
-    children: [(
-      
-    )],
+    children: [
+      {
+        path: "dashboard",
+        element: <h1>Admin Dashboard Page</h1>,
+      },
+    ],
   },
 ]);
