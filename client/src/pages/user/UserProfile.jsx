@@ -29,11 +29,11 @@ export const UserProfile = () => {
             className="w-32 h-32 rounded-full shadow-md object-cover"
           />
         </div>
-        <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">
-          Welcome, {user.name}
+        <h2 className="text-center text-2xl font-bold text-gray-800 mb-2 uppercase">
+          {user.name}
         </h2>
         <p className="text-center text-gray-600 mb-2">
-          <span className="font-semibold">Email:</span> {user.email}
+          <span className="font-semibold ">Email:</span> {user.email}
         </p>
         <p className="text-center text-gray-600 mb-4">
           <span className="font-semibold">Mobile:</span> {user.mobile}

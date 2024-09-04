@@ -9,7 +9,7 @@ import { authUser } from "./../../middlewares/authUser.js";
 import { authAdmin } from "../../middlewares/authAdmin.js";
 const router = express.Router();
 
-router.get("/productList", authUser, getProductList);
+router.get("/productlist", authUser, getProductList);
 
 router.post("/create", upload.single("image"), authAdmin, createProduct);
 

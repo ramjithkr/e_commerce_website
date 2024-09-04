@@ -20,7 +20,7 @@ export const UserHeader = () => {
           Contact
         </Link>
         <Link
-          to={"/user/collections"}
+          to={"/user/products"}
           className="hover:text-blue-500 font-sans"
         >
           Collections

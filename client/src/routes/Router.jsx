@@ -13,6 +13,7 @@ import { UserProfile } from "../pages/user/UserProfile";
 import { CartPage } from "../pages/user/CartPage";
 import { UserAuth } from "./protectedRoutes/UserAuth";
 import { AdminLayout } from "../layouts/AdminLayout";
+import { ProductPage } from "../pages/user/ProductPage";
 
 export const router = createBrowserRouter([
   {
@@ -65,8 +66,8 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "collections",
-        element: <h1>User Collections Page</h1>,
+        path: "products",
+        element: <ProductPage/>,
       },
       {
         path: "product-details/:id",
