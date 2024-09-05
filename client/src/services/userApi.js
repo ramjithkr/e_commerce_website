@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { axiosInstance } from "../config/axiosInstance";
+// import axios from "axios";
 
 export const userLogin = async (data) => {
   try {
@@ -9,7 +10,7 @@ export const userLogin = async (data) => {
       data,
       withCredentials: true,
     });
-
+   
     return response?.data;
   } catch (error) {
     console.error("Error in user login:", error);
@@ -53,9 +54,27 @@ export const fetchUserProfile = async (setUser) => {
       method: "GET",
       withCredentials: true,
     });
-    setUser(response?.data?.data)
+    setUser(response?.data?.data);
   } catch (error) {
     console.log(error);
     toast.error("error fetching data  from server");
   }
 };
+
+export const userSignup = async (userData) => {
+  try {
+    const response = await axiosInstance({
+      url: "/user/create",
+      method: "POST",
+      data: userData, // Include the userData in the request body
+      withCredentials: true,
+    });
+
+   
+    return response.data; 
+  } catch (error) {
+    console.error('Error during user signup:', error.response ? error.response.data : error.message);
+    throw error; 
+  }
+};
+

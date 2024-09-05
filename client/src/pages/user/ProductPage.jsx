@@ -14,7 +14,6 @@ export const ProductPage = () => {
         withCredentials: true,
       });
       setProduct(response?.data?.data);
-      console.log("response====", response);
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch products");

@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RootLayout } from "../layouts/RootLayout";
 import { HomePage } from "./../pages/user/HomePage";
-import { LoginPage } from "./../pages/user/LoginPage";
 import { SignupPage } from "./../pages/user/SignupPage";
 import { UserLayout } from "../layouts/UserLayout";
 import { ProductDetails } from "../pages/user/ProductDetails";
@@ -14,6 +13,7 @@ import { CartPage } from "../pages/user/CartPage";
 import { UserAuth } from "./protectedRoutes/UserAuth";
 import { AdminLayout } from "../layouts/AdminLayout";
 import { ProductPage } from "../pages/user/ProductPage";
+import { LoginPage } from "../pages/user/LoginPage";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +35,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: <LoginPage />,
+        element: <LoginPage/>,
       },
       {
         path: "signup",
@@ -66,8 +66,8 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "products",
-        element: <ProductPage/>,
+        path: "product",
+        element: <ProductPage />,
       },
       {
         path: "product-details/:id",

@@ -3,7 +3,7 @@ import { decrement, increment } from "../../redux/features/counterSlice";
 export const HomePage = () => {
   const count = useSelector((state) => state.counter.value);
   const dispatch = useDispatch();
-  console.log("count===", count);
+ 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-4xl font-bold mb-8 text-gray-800">HomePage</h1>
@@ -21,6 +21,7 @@ export const HomePage = () => {
         >
           +
         </button>
+
       </div>
     </div>
   );

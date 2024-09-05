@@ -14,6 +14,21 @@ export const getProductList = async (req, res) => {
   }
 };
 
+export const getProductDetails = async (req, res) => {
+  try {
+    const {id}= req.params
+    const productDetails = await Product.findById(id);
+
+    res.status(200).json({
+      success: true,
+      message: "fetche product Details",
+      data: productDetails,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 export const createProduct = async (req, res) => {
   try {
     const { title, desc, brand, price, category, stock, ratings } = req.body;

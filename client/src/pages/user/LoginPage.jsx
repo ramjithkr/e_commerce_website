@@ -16,7 +16,7 @@ export const LoginPage = () => {
     try {
       const response = await userLogin(data);
 
-      if (response && response.success) { // Assuming `success` is a key in your response indicating login success
+      if (response && response.success) { 
         toast.success("Login successful");
         navigate("/user/home");
       } else {

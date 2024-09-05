@@ -19,10 +19,10 @@ export const Header = () => {
           Contact
         </Link>
         <Link
-          to={"/user/collections"}
+          to={"/user/product"}
           className="hover:text-blue-500 font-sans"
         >
-          Collections
+          Products
         </Link>
       </nav>
       <div className="flex items-center gap-5">

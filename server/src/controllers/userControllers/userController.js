@@ -7,13 +7,23 @@ import { User } from "./../../models/userModel.js";
 
 export const userCreate = async (req, res) => {
   try {
-    const { name, email, password, mobile, profilepic, product } = req.body;
-    if (!name || !email || !password || !mobile) {
+    const { name, email, password, confirmPassword, mobile, profilepic, product } = req.body;
+    
+    // Check if all required fields are present
+    if (!name || !email || !password || !confirmPassword || !mobile) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
 
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Passwords do not match" });
+    }
+
+    // Check if the user already exists
     const userExists = await User.findOne({ email: email });
     if (userExists) {
       return res
@@ -21,6 +31,7 @@ export const userCreate = async (req, res) => {
         .json({ success: false, message: "User already exists" });
     }
 
+    // Hash the password
     const saltRounds = 10;
     const hashedPassword = bcrypt.hashSync(password, saltRounds);
 
@@ -29,7 +40,6 @@ export const userCreate = async (req, res) => {
     // If no profile pic is provided, upload the default one to Cloudinary
     if (!profilepic) {
       const defaultImageUrl = process.env.defaultImageUrl;
-
       const uploadResult = await cloudinaryInstance.uploader.upload(
         defaultImageUrl,
         { folder: "e_commerce_website" }
@@ -37,6 +47,7 @@ export const userCreate = async (req, res) => {
       finalProfilePic = uploadResult.url;
     }
 
+    // Create the new user
     const newUser = new User({
       name: name,
       email: email,
@@ -46,12 +57,14 @@ export const userCreate = async (req, res) => {
       product,
     });
 
+    // Save the user to the database
     await newUser.save();
 
+    // Generate and send token
     const token = generateUserToken(email);
-
     res.cookie("token", token);
     res.json({ success: true, message: "User created successfully" });
+    
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
