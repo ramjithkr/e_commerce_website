@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 p-10">
@@ -26,6 +28,10 @@ export const Footer = () => {
             <a className="block link link-hover mb-2">Terms of Use</a>
             <a className="block link link-hover mb-2">Privacy Policy</a>
             <a className="block link link-hover mb-2">Cookie Policy</a>
+            <Link to={"/adminlogin"}>
+            <p className="block link link-hover mb-2">Admin Login</p>
+            </Link>
+          
           </nav>
         </div>
         <div>

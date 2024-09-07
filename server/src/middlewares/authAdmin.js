@@ -16,7 +16,7 @@ export const authAdmin = (req, res, next) => {
         .status(400)
         .json({ success: false, message: "admin Token unathorized access" });
     }
-    req.user = tokenVarified;
+    req.admin = tokenVarified;
     next();
   } catch (error) {
     console.log(error);

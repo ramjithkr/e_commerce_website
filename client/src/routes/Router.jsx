@@ -11,9 +11,16 @@ import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserProfile } from "../pages/user/UserProfile";
 import { CartPage } from "../pages/user/CartPage";
 import { UserAuth } from "./protectedRoutes/UserAuth";
-import { AdminLayout } from "../layouts/AdminLayout";
 import { ProductPage } from "../pages/user/ProductPage";
 import { LoginPage } from "../pages/user/LoginPage";
+import { AdminLoginPage } from "../pages/admin/AdminLogin";
+import { AdminDashboard } from "../pages/admin/AdminDashboard";
+import { AdminAuth } from "./protectedRoutes/AdminAuth";
+import { CreateProduct } from "../pages/admin/CreateProduct";
+import { AdminLayout } from "./../layouts/AdminLayout";
+import { AdminProfile } from "../pages/admin/AdminProfile";
+import { AdminProductPage } from "../pages/admin/AdminProductPage";
+import { AdminProductDetails } from "./../pages/admin/AdminProductDetails";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +42,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: <LoginPage/>,
+        element: <LoginPage />,
       },
       {
         path: "signup",
@@ -88,16 +95,41 @@ export const router = createBrowserRouter([
     ],
   },
   {
+    path: "adminlogin",
+    element: <AdminLoginPage />,
+  },
+  {
     path: "admin",
     element: (
-      // <UserAuth>
-      <AdminLayout />
-      // </UserAuth>
+      <AdminAuth>
+        <AdminLayout />
+      </AdminAuth>
     ),
     children: [
       {
+        path: "home",
+        element: <HomePage />,
+      },
+
+      {
         path: "dashboard",
-        element: <h1>Admin Dashboard Page</h1>,
+        element: <AdminDashboard />,
+      },
+      {
+        path: "profile",
+        element: <AdminProfile />,
+      },
+      {
+        path: "products",
+        element: <AdminProductPage/>,
+      },
+      {
+        path: "product-details/:id",
+        element: <AdminProductDetails />,
+      },
+      {
+        path: "create-product",
+        element: <CreateProduct />,
       },
     ],
   },

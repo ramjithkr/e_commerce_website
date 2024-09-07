@@ -7,8 +7,16 @@ import { User } from "./../../models/userModel.js";
 
 export const userCreate = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, mobile, profilepic, product } = req.body;
-    
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+      mobile,
+      profilepic,
+      product,
+    } = req.body;
+
     // Check if all required fields are present
     if (!name || !email || !password || !confirmPassword || !mobile) {
       return res
@@ -64,7 +72,6 @@ export const userCreate = async (req, res) => {
     const token = generateUserToken(email);
     res.cookie("token", token);
     res.json({ success: true, message: "User created successfully" });
-    
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -106,20 +113,22 @@ export const userLogin = async (req, res) => {
   }
 };
 
-
 export const userProfile = async (req, res, next) => {
   try {
-      const user = req.user;
-      // const id = req.id 
-      const useData = await User.findOne({ email: user.email }).select("-password");
-      // const useData = await User.findById(id).select("-password");
+    const user = req.user;
+    // const id = req.id// 
+    const useData = await User.findOne({ email: user.email }).select(
+      "-password"
+    );
+    // const useData = await User.findById(id).select("-password");
 
-      res.json({ success: true, message: "user data fetched", data: useData });
+    res.json({ success: true, message: "user data fetched", data: useData });
   } catch (error) {
-      res.status(error.status || 500).json({ message: error.message || "Internal server error" });
+    res
+      .status(error.status || 500)
+      .json({ message: error.message || "Internal server error" });
   }
 };
-
 
 export const checkUser = async (req, res) => {
   try {

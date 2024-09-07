@@ -7,6 +7,7 @@ import { Product } from "../../models/productModel.js";
 import { Rating } from "../../models/ratingModel.js";
 import { Cart } from "./../../models/cartModel.js";
 
+
 // export const adminCreate = async (req, res) => {
 //   try {
 //     const { name, email, password, mobile, profilepic, product } = req.body;
@@ -46,7 +47,7 @@ import { Cart } from "./../../models/cartModel.js";
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const adminExists = await Admin.findOne({ email: email });
+    const adminExists = await Admin.findOne({ email });
 
     if (!adminExists) {
       return res
@@ -75,14 +76,14 @@ export const adminLogin = async (req, res) => {
 
 export const adminProfile = async (req, res) => {
   try {
-    const { id } = req.params;
-    const adminData = await Admin.findById(id);
+    // const {id} = req.id
+    const admin = req.admin;
+    // const adminData = await Admin.findById(id);
 
-    if (!adminData) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Admin not found" });
-    }
+    const adminData = await Admin.findOne({ email: admin.email }).select(
+      "-password"
+    );
+
     res
       .status(200)
       .json({ success: true, message: "Admin data fetched", data: adminData });
@@ -95,13 +96,18 @@ export const adminProfile = async (req, res) => {
 export const checkAdmin = async (req, res) => {
   try {
     const admin = req.admin;
+
     if (!admin) {
       return res
         .status(400)
-        .json({ success: false, message: "Admin not authenticated" });
+        .json({ success: false, message: "Admin not authenticated!" });
     }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Admin authenticated successfully!" });
   } catch (error) {
-    console.error(error);
+    console.error("Error in checkAdmin:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

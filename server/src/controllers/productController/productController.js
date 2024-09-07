@@ -16,7 +16,7 @@ export const getProductList = async (req, res) => {
 
 export const getProductDetails = async (req, res) => {
   try {
-    const {id}= req.params
+    const { id } = req.params;
     const productDetails = await Product.findById(id);
 
     res.status(200).json({
@@ -29,53 +29,137 @@ export const getProductDetails = async (req, res) => {
   }
 };
 
+// export const createProduct = async (req, res) => {
+//   try {
+//     const { title, desc, brand, price, category, stock, ratings } = req.body;
+
+//     // Check if image is provided
+//     if (!req.file) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Image is required",
+//       });
+//     }
+
+//     // Check if product with same title already exists
+//     const existingProduct = await Product.findOne({ title });
+//     if (existingProduct) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Product already exists",
+//       });
+//     }
+
+//     // Upload image to Cloudinary
+//     let uploadResult;
+//     try {
+//       uploadResult = await cloudinary.uploader.upload(req.file.path, {
+//         folder: "e_commerce_website",
+//       });
+//     } catch (uploadError) {
+//       console.error("Cloudinary upload error:", uploadError);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Failed to upload image",
+//       });
+//     }
+
+//     // Create new product
+//     const newProduct = new Product({
+//       title,
+//       desc,
+//       brand,
+//       price,
+//       category,
+//       stock,
+//       ratings,
+//       image: uploadResult?.url, // Set image URL if available
+//     });
+
+//     // Save product to the database
+//     await newProduct.save();
+
+//     // Return success response
+//     res.status(201).json({
+//       success: true,
+//       message: "New product created successfully",
+//       data: newProduct,
+//     });
+//   } catch (error) {
+//     console.error("Error creating product:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     });
+//   }
+// };
 export const createProduct = async (req, res) => {
   try {
     const { title, desc, brand, price, category, stock, ratings } = req.body;
 
     console.log("image====", req.file);
+
+    // Check if the image is provided
     if (!req.file) {
       return res
         .status(400)
         .json({ success: false, message: "Image is required" });
     }
 
-    const product = await Product.findOne({ title: title }); 
-
-    if (product) {
+    // Check if the product with the same title already exists
+    const existingProduct = await Product.findOne({ title: title });
+    if (existingProduct) {
       return res
         .status(400)
-        .json({ success: false, message: "Product is already exist" });
+        .json({ success: false, message: "Product already exists" });
     }
 
-    const uploadResult = await cloudinaryInstance.uploader
-      .upload(req.file.path, { folder: "e_commerce_website" })
-      .catch((error) => {
-        console.error(error);
+    let uploadResult;
+    try {
+      // Upload image to Cloudinary
+      uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, {
+        folder: "e_commerce_website",
+      });
+      console.log("Cloudinary upload result:====", uploadResult);
+    } catch (uploadError) {
+      console.error("Cloudinary upload error:=====", uploadError);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to upload image",
+      });
+    }
+
+    try {
+      // Create a new product
+      const newProduct = new Product({
+        title,
+        desc,
+        brand,
+        price,
+        category,
+        stock,
+        ratings: [],
+        image: uploadResult?.url, // Use the uploaded image URL
       });
 
-    console.log(uploadResult);
-    const newProduct = new Product({
-      title,
-      desc,
-      brand,
-      price,
-      category,
-      stock,
-      ratings,
-    });
-    if (uploadResult?.url) {
-      newProduct.image = uploadResult.url;
+      // Save the product to the database
+      await newProduct.save();
+      console.log("Product created successfully:", newProduct);
+      return res.status(201).json({
+        success: true,
+        message: "Product created successfully",
+        product: newProduct,
+      });
+    } catch (error) {
+      console.error("Error saving product to database:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to save product",
+      });
     }
-
-    await newProduct.save();
-    res.status(201).json({
-      success: true,
-      message: "new product created successfuly",
-      data: newProduct,
-    });
   } catch (error) {
-    res.status(500).json({
+    console.error("Error in creating product:", error);
+    return res.status(500).json({
       success: false,
       message: "Internal server error",
     });

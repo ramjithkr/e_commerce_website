@@ -1,10 +1,9 @@
-/* eslint-disable react/no-unescaped-entities */
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { userLogin } from "../../services/userApi";
+import { adminLogin } from "../../services/adminApi";
 
-export const LoginPage = () => {
+export const AdminLoginPage = () => {
   const {
     register,
     handleSubmit,
@@ -14,16 +13,16 @@ export const LoginPage = () => {
 
   const handleLogin = async (data) => {
     try {
-      const response = await userLogin(data);
+      const response = await adminLogin(data);
 
       if (response && response.success) {
-        toast.success("Login successful");
-        navigate("/user/home");
+        toast.success("Successfully logged in as Admin");
+        navigate("/admin/home"); // Single toast message
       } else {
-        toast.error(response?.message || "Login failed");
+        toast.error(response?.message || "Admin Login failed");
       }
     } catch (error) {
-      toast.error("Login failed: User not found or incorrect password");
+      toast.error("Login failed: Admin not found or incorrect password");
       console.error("Login failed:", error);
     }
   };
@@ -33,17 +32,17 @@ export const LoginPage = () => {
       <div className="hero-content flex-col lg:flex-row-reverse w-full max-w-6xl">
         <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl lg:ml-12">
           <form className="card-body" onSubmit={handleSubmit(handleLogin)}>
-            <h2 className="text-4xl font-bold text-center mb-6">Login</h2>
+            <h2 className="text-4xl font-bold text-center mb-6">Admin Login</h2>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Admin Email</span>
               </label>
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Enter your admin email"
                 className="input input-bordered"
                 {...register("email", {
-                  required: "Email is required",
+                  required: "Admin email is required",
                   pattern: {
                     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                     message: "Please enter a valid email address",
@@ -58,14 +57,14 @@ export const LoginPage = () => {
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">Admin Password</span>
               </label>
               <input
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Enter your admin password"
                 className="input input-bordered"
                 {...register("password", {
-                  required: "Password is required",
+                  required: "Admin password is required",
                   minLength: {
                     value: 6,
                     message: "Password must be at least 6 characters long",
@@ -77,30 +76,13 @@ export const LoginPage = () => {
                   {errors.password.message}
                 </p>
               )}
-              <label className="label mt-4">
-                <span className="label-text-alt">
-                  Don't have an account?{" "}
-                  <Link to="/signup" className="link link-hover text-primary">
-                    Sign up here
-                  </Link>
-                </span>
-              </label>
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary w-full" type="submit">
-                Login
+                Admin Login
               </button>
             </div>
           </form>
-        </div>
-
-        {/* Welcome Text on the Left */}
-        <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">Welcome Back!</h1>
-          <p className="py-6 text-lg">
-            We're happy to see you again. Log in to access your account and
-            continue where you left off.
-          </p>
         </div>
       </div>
     </div>
