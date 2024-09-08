@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const ContactUs = () => {
+export const ContactUsPage = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {

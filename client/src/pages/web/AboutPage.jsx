@@ -2,7 +2,7 @@
 
 import { Link } from "react-router-dom";
 
-export const About = () => {
+export const AboutPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 via-blue-100 to-white p-6">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-3xl">
