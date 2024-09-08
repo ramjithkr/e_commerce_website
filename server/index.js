@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
   cors({
-      origin:"https://e-com-website-git-main-ramjith-krs-projects.vercel.app/" ,
+      origin:"https://e-com-website-flame.vercel.app/" ,
       credentials: true,
   })
 );
