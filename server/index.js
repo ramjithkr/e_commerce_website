@@ -10,8 +10,8 @@ const app = express();
 
 app.use(
   cors({
-      origin:"https://e-com-website-flame.vercel.app" ,
-      credentials: true,
+    origin: ["https://e-com-website-flame.vercel.app", "http://localhost:5173"],
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -19,9 +19,7 @@ app.use(cookieParser());
 connectdb();
 configDotenv();
 
-
 const port = process.env.PORT || 2000;
-
 
 app.get("/", (req, res) => {
   res.status(200).send({ message: "Hello from the server" });
@@ -29,10 +27,10 @@ app.get("/", (req, res) => {
 
 app.use("/api", apiRouter);
 
-app.use(handleError)
+app.use(handleError);
 
 app.all("*", (req, res, next) => {
-    res.status(404).json({ message: "end point does not exist" });
+  res.status(404).json({ message: "end point does not exist" });
 });
 
 app.listen(port, () => {
