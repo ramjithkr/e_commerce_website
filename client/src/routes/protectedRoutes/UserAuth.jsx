@@ -1,11 +1,11 @@
-
-
 import { useEffect } from "react";
 import { axiosInstance } from "./../../config/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const UserAuth = ({ children }) => {
-  const navgate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -14,16 +14,18 @@ export const UserAuth = ({ children }) => {
           method: "GET",
           withCredentials: true,
         });
-      
-        return response?.data;
+
+        if (!response?.data?.isAuthenticated) {
+          navigate("/login");
+        }
       } catch (error) {
-        navgate("/login");
-        console.error("Authentication check failed:",error);
+        navigate("/login");
+        console.error("Authentication check failed:", error);
       }
     };
 
     checkUser();
-  })
+  }, [location.pathname, navigate]);
 
   return children;
 };
