@@ -15,9 +15,7 @@ export const UserAuth = ({ children }) => {
           withCredentials: true,
         });
 
-        if (!response?.data?.isAuthenticated) {
-          navigate("/login");
-        }
+        return response?.data;
       } catch (error) {
         navigate("/login");
         console.error("Authentication check failed:", error);
