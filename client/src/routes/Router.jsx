@@ -6,7 +6,7 @@ import { UserLayout } from "../layouts/UserLayout";
 import { ProductDetails } from "../pages/user/ProductDetails";
 import { ErrorPage } from "../pages/errorPage/ErrorPage";
 import { ContactUs } from "../pages/web/ContactUs";
-import { About } from "../pages/web/about";
+
 import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserProfile } from "../pages/user/UserProfile";
 import { CartPage } from "../pages/user/CartPage";
@@ -21,6 +21,8 @@ import { AdminLayout } from "./../layouts/AdminLayout";
 import { AdminProfile } from "../pages/admin/AdminProfile";
 import { AdminProductPage } from "../pages/admin/AdminProductPage";
 import { AdminProductDetails } from "./../pages/admin/AdminProductDetails";
+import { About } from "../pages/web/about";
+
 
 export const router = createBrowserRouter([
   {
@@ -34,7 +36,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <About />,
+        element: <About/>
       },
       {
         path: "contact",
@@ -64,7 +66,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <About />,
+        element: <About/>
       },
 
       {

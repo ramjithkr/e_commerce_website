@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+
 import { Link } from "react-router-dom";
 
 export const About = () => {
