@@ -21,8 +21,7 @@ import { AdminProfile } from "../pages/admin/AdminProfile";
 import { AdminProductPage } from "../pages/admin/AdminProductPage";
 import { AdminProductDetails } from "./../pages/admin/AdminProductDetails";
 import { AboutPage } from "../pages/web/AboutPage";
-import { UserAboutPage } from "../pages/web/userWebPage/UserAboutPage";
-import { UserContactUsPage } from "../pages/web/userWebPage/UserContactUs";
+
 
 export const router = createBrowserRouter([
   {
@@ -66,12 +65,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <UserAboutPage/>,
+        element: <AboutPage/>
       },
 
       {
         path: "contact",
-        element: <UserContactUsPage/>,
+        element: <ContactUs/>,
       },
 
       {
