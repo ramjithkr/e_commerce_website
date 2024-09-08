@@ -5,7 +5,6 @@ import { SignupPage } from "./../pages/user/SignupPage";
 import { UserLayout } from "../layouts/UserLayout";
 import { ProductDetails } from "../pages/user/ProductDetails";
 import { ErrorPage } from "../pages/errorPage/ErrorPage";
-import { ContactUs } from "../pages/web/ContactUsPage";
 import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserProfile } from "../pages/user/UserProfile";
 import { CartPage } from "../pages/user/CartPage";
@@ -21,7 +20,7 @@ import { AdminProfile } from "../pages/admin/AdminProfile";
 import { AdminProductPage } from "../pages/admin/AdminProductPage";
 import { AdminProductDetails } from "./../pages/admin/AdminProductDetails";
 import { AboutPage } from "../pages/web/AboutPage";
-
+import { ContactUsPage } from "./../pages/web/ContactUsPage";
 
 export const router = createBrowserRouter([
   {
@@ -39,7 +38,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "contact",
-        element: <ContactUs />,
+        element: <ContactUsPage />,
       },
       {
         path: "login",
@@ -65,12 +64,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <AboutPage/>
+        element: <AboutPage />,
       },
 
       {
         path: "contact",
-        element: <ContactUs/>,
+        element: <ContactUsPage />,
       },
 
       {
