@@ -8,12 +8,43 @@ import { handleError } from "./src/utils/error.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["https://e-com-website-flame.vercel.app", "http://localhost:5173"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: ["https://e-com-website-flame.vercel.app", "http://localhost:5173"],
+//     credentials: true,
+//   })
+// );
+
+
+const allowedOrigins = [
+  'http://localhost:3000', // For development
+  'https://e-commerce-website-nine-sandy.vercel.app' // For production (Vercel)
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+
+
+
+
+
+
+
+
+
+
+
 app.use(express.json());
 app.use(cookieParser());
 connectdb();
