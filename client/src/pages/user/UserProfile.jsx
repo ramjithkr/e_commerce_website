@@ -20,30 +20,31 @@ export const UserProfile = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 to-gray-300 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full border border-gray-300">
         <div className="flex justify-center mb-6">
           <img
             src={user.profile}
             alt="User Avatar"
-            className="w-32 h-32 rounded-full shadow-md object-cover"
+            className="w-32 h-32 rounded-full border-4 border-teal-500 shadow-lg object-cover"
           />
         </div>
-        <h2 className="text-center text-2xl font-bold text-gray-800 mb-2 uppercase">
+        <h2 className="text-center text-3xl font-semibold text-gray-900 mb-4 uppercase">
           {user.name}
         </h2>
-        <p className="text-center text-gray-600 mb-2">
-          <span className="font-semibold ">Email:</span> {user.email}
+        <p className="text-center  text-gray-700 mb-3 ">
+          <span className="font-medium text-gray-800">Email:</span> {user.email}
         </p>
-        <p className="text-center text-gray-600 mb-4">
-          <span className="font-semibold">Mobile:</span> {user.mobile}
+        <p className="text-center text-gray-700 mb-6 uppercase">
+          <span className="font-medium text-gray-800">Mobile:</span>{" "}
+          {user.mobile}
         </p>
         <div className="flex flex-col gap-4">
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <button className="bg-teal-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400 transition duration-300 uppercase">
             Edit Profile
           </button>
           <button
-            className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-300 uppercase"
             onClick={handleLogout}
           >
             Logout

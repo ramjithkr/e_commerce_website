@@ -15,7 +15,7 @@ export const AdminHeader = () => {
         <Link to={"/admin/products"} className="hover:text-blue-500 font-sans">
           Products
         </Link>
-        <Link to={"/admin/dashboard"} className="hover:text-blue-500 font-sans">
+        <Link to={"/admin/dashboard/create-product"} className="hover:text-blue-500 font-sans">
           Dashboard
         </Link>
       </nav>

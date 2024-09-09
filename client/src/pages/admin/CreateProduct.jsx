@@ -8,10 +8,10 @@ export const CreateProduct = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
   } = useForm();
   const navigate = useNavigate();
-  
+
   // Watch the file input to access its value
   const watchImage = watch("image");
 
@@ -44,7 +44,9 @@ export const CreateProduct = () => {
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse w-full max-w-6xl">
         <div className="card bg-base-100 w-full max-w-md shadow-2xl p-5">
-          <h2 className="text-3xl font-bold text-center mb-6">Create Product</h2>
+          <h2 className="text-3xl font-bold text-center mb-6">
+            Create Product
+          </h2>
           <form
             className="card-body space-y-4"
             encType="multipart/form-data"
@@ -61,7 +63,9 @@ export const CreateProduct = () => {
                 {...register("title", { required: "Title is required" })}
                 className="input input-bordered"
               />
-              {errors.title && <span className="text-red-500">{errors.title.message}</span>}
+              {errors.title && (
+                <span className="text-red-500">{errors.title.message}</span>
+              )}
             </div>
 
             {/* Description */}
@@ -74,7 +78,9 @@ export const CreateProduct = () => {
                 {...register("desc", { required: "Description is required" })}
                 className="textarea textarea-bordered"
               />
-              {errors.desc && <span className="text-red-500">{errors.desc.message}</span>}
+              {errors.desc && (
+                <span className="text-red-500">{errors.desc.message}</span>
+              )}
             </div>
 
             {/* Brand */}
@@ -88,7 +94,9 @@ export const CreateProduct = () => {
                 {...register("brand", { required: "Brand is required" })}
                 className="input input-bordered"
               />
-              {errors.brand && <span className="text-red-500">{errors.brand.message}</span>}
+              {errors.brand && (
+                <span className="text-red-500">{errors.brand.message}</span>
+              )}
             </div>
 
             {/* Price */}
@@ -102,7 +110,9 @@ export const CreateProduct = () => {
                 {...register("price", { required: "Price is required" })}
                 className="input input-bordered"
               />
-              {errors.price && <span className="text-red-500">{errors.price.message}</span>}
+              {errors.price && (
+                <span className="text-red-500">{errors.price.message}</span>
+              )}
             </div>
 
             {/* Category */}
@@ -116,7 +126,9 @@ export const CreateProduct = () => {
                 {...register("category", { required: "Category is required" })}
                 className="input input-bordered"
               />
-              {errors.category && <span className="text-red-500">{errors.category.message}</span>}
+              {errors.category && (
+                <span className="text-red-500">{errors.category.message}</span>
+              )}
             </div>
 
             {/* Stock */}
@@ -130,7 +142,9 @@ export const CreateProduct = () => {
                 {...register("stock", { required: "Stock is required" })}
                 className="input input-bordered"
               />
-              {errors.stock && <span className="text-red-500">{errors.stock.message}</span>}
+              {errors.stock && (
+                <span className="text-red-500">{errors.stock.message}</span>
+              )}
             </div>
 
             {/* Ratings */}
@@ -147,7 +161,9 @@ export const CreateProduct = () => {
                 {...register("ratings", { required: "Ratings are required" })}
                 className="input input-bordered"
               />
-              {errors.ratings && <span className="text-red-500">{errors.ratings.message}</span>}
+              {errors.ratings && (
+                <span className="text-red-500">{errors.ratings.message}</span>
+              )}
             </div>
 
             {/* Image */}
@@ -160,12 +176,16 @@ export const CreateProduct = () => {
                 {...register("image", { required: "Image is required" })}
                 className="file-input file-input-bordered"
               />
-              {errors.image && <span className="text-red-500">{errors.image.message}</span>}
+              {errors.image && (
+                <span className="text-red-500">{errors.image.message}</span>
+              )}
             </div>
 
             {/* Submit Button */}
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary w-full">Create Product</button>
+              <button type="submit" className="btn btn-primary w-full">
+                Create Product
+              </button>
             </div>
           </form>
         </div>

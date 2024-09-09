@@ -11,16 +11,19 @@ import { UserAuth } from "./protectedRoutes/UserAuth";
 import { ProductPage } from "../pages/user/ProductPage";
 import { LoginPage } from "../pages/user/LoginPage";
 import { AdminLoginPage } from "../pages/admin/AdminLogin";
-import { AdminDashboard } from "../pages/admin/AdminDashboard";
+
 import { AdminAuth } from "./protectedRoutes/AdminAuth";
 import { CreateProduct } from "../pages/admin/CreateProduct";
 import { AdminLayout } from "./../layouts/AdminLayout";
 import { AdminProfile } from "../pages/admin/AdminProfile";
 import { AdminProductPage } from "../pages/admin/AdminProductPage";
-import { AdminProductDetails } from "./../pages/admin/AdminProductDetails";
 import { AboutPage } from "../pages/web/AboutPage";
 import { ContactUsPage } from "./../pages/web/ContactUsPage";
-import {CartPage } from "../pages/user/CartPage";
+import { CartPage } from "../pages/user/CartPage";
+import { AdminProductDetails } from "../pages/admin/AdminProductDetails";
+import { AdminDashboardLayout } from "../layouts/AdminDashboardLayout";
+import { DeleteProduct } from "../pages/admin/DeleteProduct";
+import { UpadteOders } from "../pages/admin/UpadteOders";
 
 export const router = createBrowserRouter([
   {
@@ -90,7 +93,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "cart",
-        element: <CartPage/>,
+        element: <CartPage />,
       },
     ],
   },
@@ -112,10 +115,6 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "dashboard",
-        element: <AdminDashboard />,
-      },
-      {
         path: "profile",
         element: <AdminProfile />,
       },
@@ -127,9 +126,25 @@ export const router = createBrowserRouter([
         path: "product-details/:id",
         element: <AdminProductDetails />,
       },
+
+  
       {
-        path: "create-product",
-        element: <CreateProduct />,
+        path: "dashboard",
+        element: <AdminDashboardLayout />,
+        children: [
+          {
+            path: "create-product",
+            element: <CreateProduct />,
+          },
+          {
+            path: "delete-product",
+            element: <DeleteProduct/>,
+          },
+          {
+            path: "update-user-oders",
+            element: <UpadteOders/>,
+          },
+        ],
       },
     ],
   },

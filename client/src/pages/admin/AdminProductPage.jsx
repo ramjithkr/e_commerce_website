@@ -1,7 +1,7 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../config/axiosInstance";
-import { ProductCards } from "../../componets/ui/Cards";
+import { AdminProductCards } from "../../componets/ui/Cards";
 
 export const AdminProductPage = () => {
   const [Product, setProduct] = useState([]);
@@ -13,6 +13,7 @@ export const AdminProductPage = () => {
         method: "GET",
         withCredentials: true,
       });
+  
       setProduct(response?.data?.data);
     } catch (error) {
       console.error(error);
@@ -29,7 +30,7 @@ export const AdminProductPage = () => {
       <h1 className="text-3xl font-bold mb-8 text-center">List of Products</h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {Product.map((value) => (
-          <ProductCards key={value._id} product={value} />
+          <AdminProductCards key={value._id} product={value} />
         ))}
       </div>
     </div>

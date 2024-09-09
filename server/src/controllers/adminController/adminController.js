@@ -7,7 +7,6 @@ import { Product } from "../../models/productModel.js";
 import { Rating } from "../../models/ratingModel.js";
 import { Cart } from "./../../models/cartModel.js";
 
-
 // export const adminCreate = async (req, res) => {
 //   try {
 //     const { name, email, password, mobile, profilepic, product } = req.body;
@@ -62,9 +61,13 @@ export const adminLogin = async (req, res) => {
         .json({ success: false, message: "Admin not authenticated" });
     }
 
-    const token = generateAdminToken(email);
+    const token = generateAdminToken(adminExists.email);
 
-    res.cookie("token", token);
+    res.cookie("token", token,{
+      sameSite:"None",
+      secure : true,
+      httpOnly: true,
+    });
     res.status(200).json({ success: true, message: "Admin login successful" });
   } catch (error) {
     console.error(error);
@@ -114,7 +117,11 @@ export const checkAdmin = async (req, res) => {
 
 export const adminLogout = (req, res) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token",{
+      sameSite:"None",
+      secure : true,
+      httpOnly: true,
+    });
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     res
@@ -255,6 +262,21 @@ export const getAllReviews = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getAdminProductDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const productDetails = await Product.findById(id);
+
+    res.status(200).json({
+      success: true,
+      message: "fetche product Details",
+      data: productDetails,
+    });
+  } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
