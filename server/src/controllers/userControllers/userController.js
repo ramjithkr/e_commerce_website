@@ -70,7 +70,11 @@ export const userCreate = async (req, res) => {
 
     // Generate and send token
     const token = generateUserToken(email);
-    res.cookie("token", token);
+    res.cookie("token", token,{
+      sameSite:"None",
+      secure: true,
+      httpOnly:true,
+    })
     res.json({ success: true, message: "User created successfully" });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
@@ -103,7 +107,11 @@ export const userLogin = async (req, res) => {
 
     const token = generateUserToken(userExists.email); // Generate token using user's email
 
-    res.cookie("token", token, { httpOnly: true }); // Secure the cookie with httpOnly flag
+    res.cookie("token", token,{
+      sameSite:"None",
+      secure: true,
+      httpOnly:true,
+    })
     return res
       .status(200)
       .json({ success: true, message: "User logged in successfully" });
@@ -149,7 +157,11 @@ export const checkUser = async (req, res) => {
 
 export const userLogout = (req, res) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token",{
+      sameSite:"None",
+      secure: true,
+      httpOnly:true,
+    });
     return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
     res

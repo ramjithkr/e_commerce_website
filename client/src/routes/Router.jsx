@@ -7,7 +7,6 @@ import { ProductDetails } from "../pages/user/ProductDetails";
 import { ErrorPage } from "../pages/errorPage/ErrorPage";
 import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserProfile } from "../pages/user/UserProfile";
-import { CartPage } from "../pages/user/CartPage";
 import { UserAuth } from "./protectedRoutes/UserAuth";
 import { ProductPage } from "../pages/user/ProductPage";
 import { LoginPage } from "../pages/user/LoginPage";
@@ -21,6 +20,7 @@ import { AdminProductPage } from "../pages/admin/AdminProductPage";
 import { AdminProductDetails } from "./../pages/admin/AdminProductDetails";
 import { AboutPage } from "../pages/web/AboutPage";
 import { ContactUsPage } from "./../pages/web/ContactUsPage";
+import {CartPage } from "../pages/user/CartPage";
 
 export const router = createBrowserRouter([
   {
@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "cart",
-        element: <CartPage />,
+        element: <CartPage/>,
       },
     ],
   },

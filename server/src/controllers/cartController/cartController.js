@@ -63,9 +63,40 @@ export const removeProductFromCart = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-export const getCartDetails = async (req, res) => {
+// export const getCartList = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const cart = await Cart.findOne({ user: id }).populate(
+//       "products.product",
+//       "name price"
+//     );
+
+//     if (!cart) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Cart not found" });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Cart details retrieved successfully",
+//       data: cart,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// };
+
+export const getCartList = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validate ID (e.g., check for valid MongoDB ObjectID)
+    if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(400).json({ success: false, message: 'Invalid user ID' });
+    }
+
     const cart = await Cart.findOne({ user: id }).populate(
       "products.product",
       "name price"
@@ -87,3 +118,4 @@ export const getCartDetails = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+

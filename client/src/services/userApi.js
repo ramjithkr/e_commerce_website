@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { axiosInstance } from "../config/axiosInstance";
+
 // import axios from "axios";
 
 export const userLogin = async (data) => {
@@ -77,4 +78,5 @@ export const userSignup = async (userData) => {
     throw error; 
   }
 };
+
 

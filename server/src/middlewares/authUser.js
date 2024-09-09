@@ -15,7 +15,6 @@ export const authUser = (req, res, next) => {
         }
 
         req.user = tokenVerified;
-
         next();
     } catch (error) {
         console.log(error);
