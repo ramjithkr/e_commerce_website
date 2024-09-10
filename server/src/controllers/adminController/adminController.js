@@ -4,8 +4,7 @@ import { Admin } from "../../models/adminModels.js";
 import { generateAdminToken } from "./../../utils/genreateAdminToken.js";
 import { User } from "./../../models/userModel.js";
 import { Product } from "../../models/productModel.js";
-import { Rating } from "../../models/ratingModel.js";
-import { Cart } from "./../../models/cartModel.js";
+
 
 // export const adminCreate = async (req, res) => {
 //   try {

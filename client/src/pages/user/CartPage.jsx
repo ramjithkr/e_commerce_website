@@ -1,123 +1,112 @@
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { axiosInstance } from "../../config/axiosInstance";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { axiosInstance } from './../../config/axiosInstance';
+
 
 export const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const { id } = useParams(); // Extract the user ID from the URL parameters
+  const [cartProduct, setCartProduct] = useState([]);
+  const [error, setError] = useState(null);
 
-  // Fetch cart products from the server
+  // Fetch Cart Products
   const fetchCartProducts = async () => {
     try {
       const response = await axiosInstance({
-        url: `/cart/getcartlist/${id}`, // Corrected URL format
-        method: "GET", // Changed to GET to match typical REST conventions
+        url: '/cart/cartdetails',
+        method: 'GET',
         withCredentials: true,
       });
-
       if (response?.data?.data) {
-        setCartItems(response.data.data);
-        toast.success("Cart fetched successfully");
+        setCartProduct(response?.data?.data); // Assuming cart details are in `data.items`
       } else {
-        toast.error("No items in your cart");
+        setError('Product details not found');
       }
     } catch (error) {
-      console.error("Error during fetch", error);
-      toast.error("Failed to fetch cart items");
+      console.error(error);
+      setError('Failed to fetch product details');
     }
   };
 
   useEffect(() => {
-    if (id) {
-      fetchCartProducts();
-    }
-  }, ); // Depend on 'id' to refetch when it changes
+    fetchCartProducts();
+  }, []);
 
-  // Handle incrementing item quantity
-  const incrementQuantity = (itemId) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  // Handle decrementing item quantity
-  const decrementQuantity = (itemId) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === itemId && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
-  // Handle removing item from the cart
-  const removeItem = (itemId) => {
-    setCartItems(cartItems.filter((item) => item.id !== itemId));
-  };
-
-  // Calculate total price
-  const getTotalPrice = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+  const handleRemoveProduct = (productId) => {
+    console.log(`Removing product with id: ${productId}`);
+    // Implement the logic to remove the product from the cart
   };
 
   return (
-    <div className="cart-page">
-      <h2 className="text-2xl font-bold mb-4">Shopping Cart</h2>
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <>
-          <div className="cart-items">
-            {cartItems.map((item) => (
-              <div key={item.id} className="cart-item flex items-center mb-4">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover mr-4"
-                />
-                <div className="item-details flex-1">
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p className="text-gray-500">${item.price}</p>
-                  <div className="quantity-controls flex items-center mt-2">
-                    <button
-                      onClick={() => decrementQuantity(item.id)}
-                      className="px-2 py-1 bg-gray-300 rounded"
-                    >
-                      -
-                    </button>
-                    <span className="mx-2">{item.quantity}</span>
-                    <button
-                      onClick={() => incrementQuantity(item.id)}
-                      className="px-2 py-1 bg-gray-300 rounded"
-                    >
-                      +
-                    </button>
+    <div className="flex flex-col md:flex-row w-screen h-full px-14 py-7">
+      {/* My Cart Section */}
+      <div className="w-full flex flex-col h-fit gap-4 p-4">
+        <p className="text-blue-900 text-xl font-extrabold">My cart</p>
+        
+        {/* Display error message */}
+        {error && <p className="text-red-500">{error}</p>}
+
+        {/* Display products if cartProduct is not empty */}
+        {cartProduct.length > 0 ? (
+          cartProduct.map((product) => (
+            <div key={product.product._id} className="flex flex-col p-4 text-lg font-semibold shadow-md border rounded-sm">
+              <div className="flex flex-col md:flex-row gap-3 justify-between">
+                {/* Product Information */}
+                <div className="flex flex-row gap-6 items-center">
+                  <div className="w-28 h-28">
+                    <img className="w-full h-full" src={product.product.image} alt={product.product.title} />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-lg text-gray-800 font-semibold">{product.product.title}</p>
+                    <p className="text-xs text-gray-600 font-semibold">
+                      Color: <span className="font-normal">{product.color}</span>
+                    </p>
+                    <p className="text-xs text-gray-600 font-semibold">
+                      Size: <span className="font-normal">{product.size}</span>
+                    </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="ml-4 text-red-500"
-                >
-                  Remove
+                {/* Price Information */}
+                <div className="self-center text-center">
+                  <p className="text-gray-600 font-normal text-sm line-through">
+                    ${product.product.originalPrice}
+                    <span className="text-emerald-500 ml-2">({product.product.discount}% OFF)</span>
+                  </p>
+                  <p className="text-gray-800 font-normal text-xl">${product.product.price}</p>
+                </div>
+                {/* Remove Product Icon */}
+                <div className="self-center">
+                  <button onClick={() => handleRemoveProduct(product.product._id)}>
+                    <svg height="24px" width="24px" viewBox="0 0 512 512">
+                      <path d="M64 160l26 320c2.2 17 16.5 30 33.5 30h265c17 0 31.3-13 33.5-30l26-320H64zm278.8 289.6c-.5 8.4-7.5 15-15.9 15h-128c-8.4 0-15.4-6.6-15.9-15L171.8 192h168.5l2.5 257.6zM352 112l-9.4-28.2c-4.5-13.5-17-22.5-31-22.5H200.4c-14 0-26.5 9-31 22.5L160 112H64v32h384v-32H352zM272 256h-32v128h32V256zm-64 0h-32v128h32V256zm128 0h-32v128h32V256z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              {/* Product Quantity */}
+              <div className="flex flex-row self-center gap-1">
+                <button className="w-5 h-5 self-center rounded-full border border-gray-300">
+                  {/* Decrement Quantity */}
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#d1d5db" strokeWidth={2}>
+                    <path d="M5 12h14" />
+                  </svg>
+                </button>
+                <input
+                  type="text"
+                  readOnly
+                  value={product.quantity}
+                  className="w-8 h-8 text-center text-gray-900 text-sm outline-none border border-gray-300 rounded-sm"
+                />
+                <button className="w-5 h-5 self-center rounded-full border border-gray-300">
+                  {/* Increment Quantity */}
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#9ca3af" strokeWidth={2}>
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
                 </button>
               </div>
-            ))}
-          </div>
-          <div className="cart-summary mt-6">
-            <h3 className="text-xl font-semibold">Total: ${getTotalPrice()}</h3>
-            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-              Proceed to Checkout
-            </button>
-          </div>
-        </>
-      )}
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">Your cart is empty</p>
+        )}
+      </div>
     </div>
   );
 };

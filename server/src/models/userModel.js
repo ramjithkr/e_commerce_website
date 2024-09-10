@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema(
     },
     profile: {
       type: String,
-      default: "https://www.pngitem.com/pimgs/m/30-307416_profile-icon-png-image-free-download-searchpng-employee.png",
+      default:
+        "https://www.pngitem.com/pimgs/m/30-307416_profile-icon-png-image-free-download-searchpng-employee.png",
     },
     wishlist: [
       {
@@ -33,15 +34,19 @@ const userSchema = new mongoose.Schema(
         ref: "Wishlist",
       },
     ],
-    cart: [
+    product: [
       {
         product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
         },
-        quantity: {
-          type: Number,
-          default: 1,
+      },
+    ],
+    cart: [
+      {
+        cart: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Cart",
         },
       },
     ],
