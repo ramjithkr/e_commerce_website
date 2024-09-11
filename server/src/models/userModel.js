@@ -42,17 +42,9 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    cart: [
-      {
-        cart: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Cart",
-        },
-      },
-    ],
   },
   {
-    timestamps: true, // Automatically add createdAt and updatedAt fields
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
   }
 );
 

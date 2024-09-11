@@ -3,7 +3,7 @@ import { authUser } from "../../middlewares/authUser.js";
 import {
   addProductToCart,
   getCartList,
-} from "./../../controllers/cartController/cartController.js";
+} from "../../controllers/cartController/cartController.js";
 
 const router = express.Router();
 

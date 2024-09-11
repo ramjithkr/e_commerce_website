@@ -1,53 +1,56 @@
-
-import { Product } from './../../models/productModel.js';
-import Cart from './../../models/cartModel.js';
-
-
-
-
+import Cart from "../../models/cartModel.js";
+import { Product } from "../../models/productModel.js";
 
 export const addProductToCart = async (req, res) => {
-  const {  id, quantity} = req.body;
-  const productId = id;
-  const {userId} =req.user;
-  // Check if productId and quantity are provided
-  if (!productId || !quantity) {
-    return res.status(400).json({ success: false, message: 'Product ID and quantity are required.' });
-  }
-
   try {
-   
+    // Extract user ID from req.user (assuming req.user contains user details)
+    const userId = req.user._id;  // Ensure req.user has the user ID
 
-    // Find the product
+    // Extract productId and quantity from request body
+    const { productId, quantity } = req.body;
+
+    if (!productId || !quantity) {
+      return res.status(400).json({ message: "Product ID and quantity are required" });
+    }
+
+    // Check if the product exists
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found.' });
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    // Find or create the cart
+    // Find the cart for the user
     let cart = await Cart.findOne({ user: userId });
-    if (!cart) {
-      cart = new Cart({ user: id, items: [] });
-    }
 
-    // Check if the product is already in the cart
-    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    if (cart) {
+      // Cart exists, check if product is already in the cart
+      const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
 
-    if (itemIndex > -1) {
-      // Update the quantity if the item already exists in the cart
-      cart.items[itemIndex].quantity += quantity;
+      if (itemIndex > -1) {
+        // Product is already in the cart, update the quantity
+        cart.items[itemIndex].quantity += quantity;
+      } else {
+        // Product is not in the cart, add new item
+        cart.items.push({ product: productId, quantity });
+      }
+
+      // Save the updated cart
+      await cart.save();
     } else {
-      // Add a new item to the cart
-      cart.items.push({ product: productId, quantity });
+      // No cart exists, create a new one
+      cart = new Cart({
+        user: userId,
+        items: [{ product: productId, quantity }],
+      });
+
+      // Save the new cart
+      await cart.save();
     }
 
-    // Save the cart
-    await cart.save();
-
-    res.status(200).json({ success: true, message: 'Product added to cart successfully!', cart });
+    res.status(200).json({ message: "Product added to cart successfully", cart });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error("Error adding product to cart:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -56,22 +59,23 @@ export const addProductToCart = async (req, res) => {
 
 
 
+
+
 export const getCartList = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming 'id' holds the user's ObjectId in req.user
-    console.log("User ID=====", userId);
+    const userId = req.user._id; // Assuming authUser middleware attaches user to req
 
-    let cart = await Cart.findOne({ user: userId }).populate('items.product'); // Populating product details
+    // Find the cart for the user
+    const cart = await Cart.findOne({ user: userId }).populate("items.product"); // Populate product details
 
-    // If no cart found, create an empty cart for the user
     if (!cart) {
-      cart = new Cart({ user: userId, items: [] });
-      await cart.save();
+      return res.status(404).json({ message: "Cart not found" });
     }
 
-    res.status(200).json({ success: true, data: cart });
+    // Send cart details in the response
+    res.status(200).json({ data: cart.items });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error("Error fetching cart details:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

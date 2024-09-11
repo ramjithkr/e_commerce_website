@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../config/axiosInstance";
 import { AdminDeleteProductCards } from "../../componets/ui/Cards";
- // Fixed typo in path
 
 export const DeleteProduct = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deletingProduct, setDeletingProduct] = useState(null);
+  const [deleteError, setDeleteError] = useState(null);
 
   const deleteProducts = async (productId) => {
     try {
@@ -18,9 +18,11 @@ export const DeleteProduct = () => {
         withCredentials: true,
       });
       setProducts((prevProducts) => prevProducts.filter((p) => p._id !== productId));
+      setDeleteError(null); // Clear any previous errors
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete product");
+      setDeleteError("Failed to delete product");
     } finally {
       setLoading(false);
       setDeletingProduct(null); // Reset deletingProduct state after deletion
@@ -51,11 +53,18 @@ export const DeleteProduct = () => {
 
   const handleDeleteConfirmation = (productId) => {
     setDeletingProduct(productId);
+    setDeleteError(null); // Clear any previous errors
   };
 
   const handleConfirmDelete = () => {
     if (deletingProduct) {
-      deleteProducts(deletingProduct);
+      const product = products.find((p) => p._id === deletingProduct);
+      if (product && product.brand === "Black Mamba") {
+        setDeleteError("This is a default product and cannot be deleted.");
+        setDeletingProduct(null); // Close the modal
+      } else {
+        deleteProducts(deletingProduct);
+      }
     }
   };
 
@@ -79,9 +88,13 @@ export const DeleteProduct = () => {
           <div className="bg-gray-800 bg-opacity-50 absolute inset-0"></div>
           <div className="bg-white p-6 rounded-lg z-10 shadow-lg w-full max-w-md">
             <h2 className="text-2xl font-bold mb-4">Confirm Deletion</h2>
-            <p className="mb-6">
-              Are you sure you want to delete this product? This action cannot be undone.
-            </p>
+            {deleteError ? (
+              <p className="mb-6 text-red-500">{deleteError}</p>
+            ) : (
+              <p className="mb-6">
+                Are you sure you want to delete this product? This action cannot be undone.
+              </p>
+            )}
             <div className="flex justify-end gap-4">
               <button
                 className="btn bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors"
@@ -89,12 +102,14 @@ export const DeleteProduct = () => {
               >
                 Cancel
               </button>
-              <button
-                className="btn bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                onClick={handleConfirmDelete} // Confirm delete
-              >
-                Yes, Delete
-              </button>
+              {!deleteError && (
+                <button
+                  className="btn bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                  onClick={handleConfirmDelete} // Confirm delete
+                >
+                  Yes, Delete
+                </button>
+              )}
             </div>
           </div>
         </div>

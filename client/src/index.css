@@ -7,3 +7,13 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+/* Custom CSS to hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+}

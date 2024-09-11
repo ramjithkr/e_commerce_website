@@ -9,7 +9,8 @@ export const ProductDetails = () => {
   const [cartMessage, setCartMessage] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
-  const { id } = useParams();
+  const { id } = useParams(); // productId is `id` from URL
+
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
@@ -40,10 +41,10 @@ export const ProductDetails = () => {
         url: `/cart/add`,
         method: "POST",
         withCredentials: true,
-        data: { id, quantity },
+        data: { productId: id, quantity }, // Send correct productId and quantity
       });
 
-      if (response?.data?.success) {
+      if (response?.data?.message === 'Product added to cart successfully') {
         setCartMessage("Product added to cart successfully!");
       } else {
         setCartMessage("Failed to add product to cart");
