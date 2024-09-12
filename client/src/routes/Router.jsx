@@ -11,7 +11,6 @@ import { UserAuth } from "./protectedRoutes/UserAuth";
 import { ProductPage } from "../pages/user/ProductPage";
 import { LoginPage } from "../pages/user/LoginPage";
 import { AdminLoginPage } from "../pages/admin/AdminLogin";
-
 import { AdminAuth } from "./protectedRoutes/AdminAuth";
 import { CreateProduct } from "../pages/admin/CreateProduct";
 import { AdminLayout } from "./../layouts/AdminLayout";
@@ -22,8 +21,10 @@ import { ContactUsPage } from "./../pages/web/ContactUsPage";
 import { CartPage } from "../pages/user/CartPage";
 import { AdminProductDetails } from "../pages/admin/AdminProductDetails";
 import { AdminDashboardLayout } from "../layouts/AdminDashboardLayout";
-import { DeleteProduct } from "../pages/admin/DeleteProduct";
+import { CrudProduct } from "../pages/admin/CrudProduct";
 import { UpadteOders } from "../pages/admin/UpadteOders";
+import { UpdateProduct } from "../pages/admin/UpdateProduct";
+import { GetUsersList } from "../pages/admin/GetUsersList";
 
 export const router = createBrowserRouter([
   {
@@ -127,7 +128,6 @@ export const router = createBrowserRouter([
         element: <AdminProductDetails />,
       },
 
-  
       {
         path: "dashboard",
         element: <AdminDashboardLayout />,
@@ -137,12 +137,20 @@ export const router = createBrowserRouter([
             element: <CreateProduct />,
           },
           {
-            path: "delete-product",
-            element: <DeleteProduct/>,
+            path: "crud-product",
+            element: <CrudProduct />,
           },
           {
             path: "update-user-oders",
-            element: <UpadteOders/>,
+            element: <UpadteOders />,   ///  not complete
+          },
+          {
+            path: "update-product/:id",
+            element: <UpdateProduct />,   // not completed error in cloudnery
+          },
+          {
+            path: "get-users-details",
+            element: <GetUsersList/>,
           },
         ],
       },

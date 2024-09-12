@@ -17,6 +17,10 @@ router.get("/details/:id",authUser,getProductDetails)
 
 
 router.post("/create", upload.single("image"), authAdmin, createProduct);
+
+//to update the product and get that single product in the admmin   d  dashboard
 router.put("/update/:id", authAdmin, updatedProduct);
+router.get("/update/:id", authAdmin, updatedProduct);
+
 
 export default router;

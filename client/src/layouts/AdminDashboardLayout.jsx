@@ -1,15 +1,13 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom";
 import { AdminDashboardHeader } from "../componets/admin/AdminDashboardHeader";
 
 export const AdminDashboardLayout = () => {
   return (
     <div>
-     
-     <AdminDashboardHeader/>
+      <AdminDashboardHeader />
       <div className="min-h-96">
-        <Outlet/>
+        <Outlet />
       </div>
-
     </div>
-  )
-}
+  );
+};

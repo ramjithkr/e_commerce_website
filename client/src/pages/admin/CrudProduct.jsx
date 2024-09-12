@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useState, useEffect } from "react";
 import { axiosInstance } from "../../config/axiosInstance";
-import { AdminDeleteProductCards } from "../../componets/ui/Cards";
+import { toast } from "react-hot-toast";
+import { CrudProductCards } from "../../componets/ui/Cards";
 
-export const DeleteProduct = () => {
+export const CrudProduct = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deletingProduct, setDeletingProduct] = useState(null);
@@ -17,8 +17,12 @@ export const DeleteProduct = () => {
         method: "DELETE",
         withCredentials: true,
       });
-      setProducts((prevProducts) => prevProducts.filter((p) => p._id !== productId));
+      // Filter out deleted product from the list
+      setProducts((prevProducts) =>
+        prevProducts.filter((p) => p._id !== productId)
+      );
       setDeleteError(null); // Clear any previous errors
+      toast.success("Product deleted successfully");
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete product");
@@ -37,7 +41,6 @@ export const DeleteProduct = () => {
         method: "GET",
         withCredentials: true,
       });
-     
       setProducts(response?.data?.data);
     } catch (error) {
       console.error(error);
@@ -59,9 +62,8 @@ export const DeleteProduct = () => {
   const handleConfirmDelete = () => {
     if (deletingProduct) {
       const product = products.find((p) => p._id === deletingProduct);
-      if (product && product.brand === "Black Mamba") {
-        setDeleteError("This is a default product and cannot be deleted.");
-        setDeletingProduct(null); // Close the modal
+      if (product && product.brand.toLowerCase() === "black mamba") {
+        setDeleteError("This product is default-made and cannot be deleted.");
       } else {
         deleteProducts(deletingProduct);
       }
@@ -74,10 +76,10 @@ export const DeleteProduct = () => {
       {loading && <p className="text-center text-gray-600">Loading...</p>}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
-          <AdminDeleteProductCards
+          <CrudProductCards
             key={product._id}
             product={product}
-            onDelete={() => handleDeleteConfirmation(product._id)}
+            onDelete={() => handleDeleteConfirmation(product._id)} // Pass delete function
           />
         ))}
       </div>
@@ -92,7 +94,8 @@ export const DeleteProduct = () => {
               <p className="mb-6 text-red-500">{deleteError}</p>
             ) : (
               <p className="mb-6">
-                Are you sure you want to delete this product? This action cannot be undone.
+                Are you sure you want to delete this product? This action cannot
+                be undone.
               </p>
             )}
             <div className="flex justify-end gap-4">

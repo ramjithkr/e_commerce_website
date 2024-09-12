@@ -12,22 +12,28 @@ export const AdminDashboardHeader = () => {
         {/* Menu */}
         <div className="hidden md:flex items-center space-x-6">
           <Link
+            to="/admin/dashboard/get-users-details"
+            className="hover:text-gray-400 transition duration-200"
+          >
+            User Details
+          </Link>
+          <Link
             to="/admin/dashboard/create-product"
             className="hover:text-gray-400 transition duration-200"
           >
             Create Product
           </Link>
           <Link
-            to="/admin/dashboard/delete-product"
+            to="/admin/dashboard/crud-product"
             className="hover:text-gray-400 transition duration-200"
           >
-            Delete Product
+            Delete / update
           </Link>
           <Link
-            to="/admin/dashboard/update-user-orders"
+            to="/admin/"
             className="hover:text-gray-400 transition duration-200"
           >
-            Update User Orders
+            User Orders
           </Link>
         </div>
 
@@ -58,7 +64,10 @@ export const AdminDashboardHeader = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div id="mobile-menu" className="md:hidden hidden bg-gray-700 p-4 rounded-md mt-2">
+      <div
+        id="mobile-menu"
+        className="md:hidden hidden bg-gray-700 p-4 rounded-md mt-2"
+      >
         <Link
           to="/admin/dashboard/create-product"
           className="block text-white py-2 hover:bg-gray-600 rounded transition duration-200"

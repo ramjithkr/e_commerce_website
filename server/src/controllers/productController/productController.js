@@ -102,23 +102,55 @@ export const createProduct = async (req, res) => {
   }
 };
 
+// Update Product
 export const updatedProduct = async (req, res) => {
   try {
     const { title, desc, image, brand, price, category, stock, ratings } =
       req.body;
-    const id = req.prams.id;
+    const id = req.params.id;
 
     const updatedProduct = await Product.findOneAndUpdate(
-      id,
+      { _id: id },
       { title, desc, image, brand, price, category, stock, ratings },
-      { new: true }
+      { new: true } // Return the updated document
     );
+
+    if (!updatedProduct) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
     res.status(200).json({
-      sucess: false,
-      message: "products are updated",
+      success: true,
+      message: "Product updated successfully",
       data: updatedProduct,
     });
   } catch (error) {
-    res.status(500).json({ sucess: false, message: "Internal server error" });
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+// Get Single Product
+export const getProductById = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

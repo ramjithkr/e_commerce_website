@@ -62,8 +62,7 @@ export const AdminProductCards = ({ product }) => {
 
 import { useState } from "react";
 
-
-export const AdminDeleteProductCards = ({ product, onDelete }) => {
+export const CrudProductCards = ({ product, onDelete }) => {
   const [showModal, setShowModal] = useState(false); // Modal state to control visibility
 
   const handleDeleteClick = () => {
@@ -91,14 +90,21 @@ export const AdminDeleteProductCards = ({ product, onDelete }) => {
         <p className="text-xl font-bold text-indigo-600 mb-4">
           ₹{product?.price}
         </p>
-        <div className="card-actions mt-auto w-full flex gap-2">
+        <div className="card-actions mt-auto w-full flex gap-2 justify-between">
           <Link to={`/admin/product-details/${product._id}`}>
-            <button className="w-full bg-blue-600 text-white rounded-lg py-2 px-4 text-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
+            <button className="flex-1 bg-blue-600 text-white rounded-lg py-2 px-4 text-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
               View Product
             </button>
           </Link>
+          
+          <Link to={`/admin/dashboard/update-product/${product._id}`}>
+            <button className="flex-1 bg-yellow-500 text-white rounded-lg py-2 px-4 text-lg font-semibold hover:bg-yellow-600 transition-colors duration-300">
+              Update Product
+            </button>
+          </Link>
+
           <button
-            className="w-full bg-red-600 text-white rounded-lg py-2 px-4 text-lg font-semibold hover:bg-red-700 transition-colors duration-300"
+            className="flex-1 bg-red-600 text-white rounded-lg py-2 px-4 text-lg font-semibold hover:bg-red-700 transition-colors duration-300"
             onClick={handleDeleteClick} // Show modal on click
           >
             Delete Product

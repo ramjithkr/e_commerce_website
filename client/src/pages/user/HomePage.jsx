@@ -1,13 +1,13 @@
-import { DisplayImages1 } from "../Home/DisplayImages1";
-import { MensPendent } from "../Home/MensPendent";
-import { Carousel } from "./../Home/Carousel";
+// import { DisplayImages1 } from "../Home/DisplayImages1";
+// import { MensPendent } from "../Home/MensPendent";
+// import { Carousel } from "./../Home/Carousel";
 
 export const HomePage = () => {
   return (
     <div>
-      <Carousel />
+      {/* <Carousel />
       <MensPendent />
-      <DisplayImages1 />
+      <DisplayImages1 /> */}
     </div>
   );
 };

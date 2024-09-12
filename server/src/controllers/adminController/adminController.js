@@ -5,7 +5,6 @@ import { generateAdminToken } from "./../../utils/genreateAdminToken.js";
 import { User } from "./../../models/userModel.js";
 import { Product } from "../../models/productModel.js";
 
-
 // export const adminCreate = async (req, res) => {
 //   try {
 //     const { name, email, password, mobile, profilepic, product } = req.body;
@@ -17,7 +16,8 @@ import { Product } from "../../models/productModel.js";
 //       return res.status(404).json({ success: false, message: "Admin already exists" });
 //     }
 
-//     const saltRound = 10;
+//
+const saltRound = 10;
 //     const hashedPassword = bcrypt.hashSync(password, saltRound);
 
 //     const newAdmin = new Admin({
@@ -62,9 +62,9 @@ export const adminLogin = async (req, res) => {
 
     const token = generateAdminToken(adminExists.email);
 
-    res.cookie("token", token,{
-      sameSite:"None",
-      secure : true,
+    res.cookie("token", token, {
+      sameSite: "None",
+      secure: true,
       httpOnly: true,
     });
     res.status(200).json({ success: true, message: "Admin login successful" });
@@ -116,9 +116,9 @@ export const checkAdmin = async (req, res) => {
 
 export const adminLogout = (req, res) => {
   try {
-    res.clearCookie("token",{
-      sameSite:"None",
-      secure : true,
+    res.clearCookie("token", {
+      sameSite: "None",
+      secure: true,
       httpOnly: true,
     });
     return res.status(200).json({ message: "Logout successful" });
@@ -126,23 +126,6 @@ export const adminLogout = (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Internal server error!!!" });
-  }
-};
-
-export const getUsersList = async (req, res) => {
-  try {
-    const users = await User.find().select("-password");
-
-    if (!users.length) {
-      return res
-        .status(404)
-        .json({ success: false, message: "No users found" });
-    }
-
-    res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -279,3 +262,62 @@ export const getAdminProductDetails = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+
+
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const adminEmail = req.user.email;
+
+    // Check if admin email is 'ramjithkr@gmail.com'
+    if (adminEmail !== 'ramjithkr@gmail.com') {
+      return res.status(403).json({
+        success: false,
+        message: "Only Super Admin can delete users.",
+      });
+    }
+
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Delete the user
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getUsersList = async (req, res) => {
+  try {
+    // Find all users and select the required fields (photo, name, email, createdAt)
+    const users = await User.find({}, "photo name email createdAt");
+
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
