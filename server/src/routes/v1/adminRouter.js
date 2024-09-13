@@ -1,5 +1,6 @@
 import e from "express";
 import {
+  adminCreate,
   adminLogin,
   adminLogout,
   adminProfile,
@@ -18,6 +19,8 @@ import { authAdmin } from "../../middlewares/authAdmin.js";
 
 const router = e.Router();
 
+router.post('/cerate',adminCreate)
+
 router.post("/login", adminLogin);
 router.get("/profile", authAdmin, adminProfile);
 router.post("/logout", authAdmin, adminLogout);
@@ -25,9 +28,8 @@ router.get("/getAllProducts", authAdmin, getAllProducts);
 router.get("/details/:id", authAdmin, getAdminProductDetails);
 router.delete("/deleteProduct/:id", authAdmin, deleteProduct);
 router.get("/getuserlist", authAdmin, getUsersList);
-router.delete("/deleteuser", authAdmin, deleteUser);
 
-
+router.delete("/deleteUser/:id",authAdmin, deleteUser);
 
 
 router.get("/getallcarts", authAdmin, getAllUsersCarts);

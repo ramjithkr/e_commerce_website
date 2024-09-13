@@ -5,42 +5,47 @@ import { generateAdminToken } from "./../../utils/genreateAdminToken.js";
 import { User } from "./../../models/userModel.js";
 import { Product } from "../../models/productModel.js";
 
-// export const adminCreate = async (req, res) => {
-//   try {
-//     const { name, email, password, mobile, profilepic, product } = req.body;
-//     if (!name || !email || !password || !mobile) {
-//       return res.status(400).json({ success: false, message: "All fields are required" });
-//     }
-//     const adminExist = await Admin.findOne({ email: email });
-//     if (adminExist) {
-//       return res.status(404).json({ success: false, message: "Admin already exists" });
-//     }
+export const adminCreate = async (req, res) => {
+  try {
+    const { name, email, password, mobile, profilepic, product } = req.body;
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+    const adminExist = await Admin.findOne({ email: email });
+    if (adminExist) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin already exists" });
+    }
 
-//
-const saltRound = 10;
-//     const hashedPassword = bcrypt.hashSync(password, saltRound);
+    const saltRound = 10;
+    const hashedPassword = bcrypt.hashSync(password, saltRound);
 
-//     const newAdmin = new Admin({
-//       name: name,
-//       email: email,
-//       password: hashedPassword,
-//       mobile,
-//       role: "admin",
-//       profilepic,
-//       product,
-//     });
+    const newAdmin = new Admin({
+      name: name,
+      email: email,
+      password: hashedPassword,
+      mobile,
+      role: "admin",
+      profilepic,
+      product,
+    });
 
-//     await newAdmin.save();
+    await newAdmin.save();
 
-//     const token = generateAdminToken(email);
+    const token = generateAdminToken(email);
 
-//     res.cookie("token", token);
-//     res.status(201).json({ success: true, message: "Admin created successfully" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// };
+    res.cookie("token", token);
+    res
+      .status(201)
+      .json({ success: true, message: "Admin created successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 
 export const adminLogin = async (req, res) => {
   try {
@@ -263,46 +268,7 @@ export const getAdminProductDetails = async (req, res) => {
   }
 };
 
-
-
-export const deleteUser = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const adminEmail = req.user.email;
-
-    // Check if admin email is 'ramjithkr@gmail.com'
-    if (adminEmail !== 'ramjithkr@gmail.com') {
-      return res.status(403).json({
-        success: false,
-        message: "Only Super Admin can delete users.",
-      });
-    }
-
-    // Check if the user exists
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    // Delete the user
-    await User.findByIdAndDelete(userId);
-
-    res.status(200).json({
-      success: true,
-      message: "User deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-};
-
+// Function to get the list of users
 export const getUsersList = async (req, res) => {
   try {
     // Find all users and select the required fields (photo, name, email, createdAt)
@@ -321,3 +287,39 @@ export const getUsersList = async (req, res) => {
   }
 };
 
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const admin = req.admin;
+
+   
+    if (admin.email !== "ramjithkr5441@gmail.com") {
+      return res.status(403).json({
+        success: false,
+        message: "Only superadmins can delete users.",
+      });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Proceed to delete the user
+    await User.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};

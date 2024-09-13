@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import { axiosInstance } from "./../../config/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const AdminAuth = ({ children }) => {
+  const location = useLocation();
   const navgate = useNavigate();
   useEffect(() => {
     const checkUser = async () => {
@@ -22,7 +23,7 @@ export const AdminAuth = ({ children }) => {
       }
     };
 
-    checkUser();
+    checkUser(location.pathname,navgate);
   })
 
   return children;
