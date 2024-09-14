@@ -5,7 +5,6 @@ import { SignupPage } from "./../pages/user/SignupPage";
 import { UserLayout } from "../layouts/UserLayout";
 import { ProductDetails } from "../pages/user/ProductDetails";
 import { ErrorPage } from "../pages/errorPage/ErrorPage";
-import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserProfile } from "../pages/user/UserProfile";
 import { UserAuth } from "./protectedRoutes/UserAuth";
 import { ProductPage } from "../pages/user/ProductPage";
@@ -24,7 +23,7 @@ import { AdminDashboardLayout } from "../layouts/AdminDashboardLayout";
 import { CrudProduct } from "../pages/admin/CrudProduct";
 import { UpadteOders } from "../pages/admin/UpadteOders";
 import { UpdateProduct } from "../pages/admin/UpdateProduct";
-import { GetUsersList } from "../pages/admin/GetUsersList";
+import { WishlistPage } from "../pages/admin/GetUsersList";
 
 export const router = createBrowserRouter([
   {
@@ -150,7 +149,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "get-users-details",
-            element: <GetUsersList/>,
+            element: <getUsersList/>,
           },
         ],
       },

@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 // Add product to cart
-router.post(`/add`, authUser, addProductToCart);
+router.post(`/add/:id`, authUser, addProductToCart);
 
 router.get("/cartdetails", authUser, getCartList);
 

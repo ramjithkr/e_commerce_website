@@ -1,58 +1,148 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Trash } from "lucide-react";
+import { Trash, ShoppingCart } from "lucide-react";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
+import { axiosInstance } from "../../config/axiosInstance";
 
 export const WishlistPage = () => {
-  // Example state for wishlist items
-  const [wishlistItems, setWishlistItems] = useState([
-    { id: 1, name: "Product 1", price: "$20.00", image: "/path/to/image1.jpg" },
-    { id: 2, name: "Product 2", price: "$30.00", image: "/path/to/image2.jpg" },
-    { id: 3, name: "Product 3", price: "$40.00", image: "/path/to/image3.jpg" }
-  ]);
+  const [product, setProduct] = useState([]);
 
-  const handleRemove = (id) => {
-    setWishlistItems(wishlistItems.filter(item => item.id !== id));
+  // Fetch wishlist products
+  const fetchWishlistProducts = async () => {
+    try {
+      const response = await axiosInstance({
+        url: "/wishlist/wishlistdetails",
+        method: "GET",
+        withCredentials: true,
+      });
+      if (response?.data?.data) {
+        setProduct(response.data.data);
+      } else {
+        toast.error("Product details not found");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch wishlist products");
+    }
+  };
+
+  useEffect(() => {
+    fetchWishlistProducts();
+  }, []);
+
+  // Remove item from wishlist
+  const handleRemove = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to remove this item from your wishlist?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axiosInstance({
+            url: `/wishlist/remove/${id}`,
+            method: "DELETE",
+            withCredentials: true,
+          });
+          if (response?.data?.data) {
+            setProduct((prevProducts) =>
+              prevProducts.filter((item) => item.id !== id)
+            );
+            Swal.fire("Removed!", "Your item has been removed.", "success");
+          } else {
+            toast.error("Failed to remove item");
+          }
+        } catch (error) {
+          console.error(error);
+          toast.error("Error removing product");
+        }
+      }
+    });
+  };
+
+  // Add item to cart
+  const handleAddToCart = async (id) => {
+    try {
+      const response = await axiosInstance({
+        url: `/cart/add/${id}`,
+        method: "POST",
+        withCredentials: true,
+      });
+      if (response?.data?.data) {
+        Swal.fire({
+          icon: "success",
+          title: "Added to Cart",
+          text: "This product has been added to your cart.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        toast.error("Failed to add item to cart");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error adding product to cart");
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-200 via-green-100 to-white p-6">
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-4xl">
-        <h1 className="text-4xl font-extrabold text-gray-800 mb-6 text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 via-white to-gray-100 p-6">
+      <div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-5xl">
+        <h1 className="text-5xl font-bold text-gray-900 mb-8 text-center">
           Your Wishlist
         </h1>
-        {wishlistItems.length === 0 ? (
-          <p className="text-lg text-gray-700 text-center">
-            Your wishlist is empty. Browse our products and add your favorites!
+        {product.length === 0 ? (
+          <p className="text-lg text-gray-600 text-center">
+            Your wishlist is empty. Start adding your favorite products!
           </p>
         ) : (
-          <div className="space-y-6">
-            {wishlistItems.map(item => (
-              <div key={item.id} className="flex items-center justify-between p-4 border border-gray-300 rounded-xl shadow-md">
-                <div className="flex items-center gap-4">
+          <div className="space-y-8">
+            {product.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between p-6 border border-gray-200 rounded-xl shadow-lg bg-gradient-to-tr from-green-50 to-white"
+              >
+                <div className="flex items-center gap-6">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-16 h-16 object-cover rounded-lg"
+                    className="w-20 h-20 object-cover rounded-xl shadow-sm"
                   />
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-800">{item.name}</h2>
-                    <p className="text-gray-600">{item.price}</p>
+                    <h2 className="text-2xl font-semibold text-gray-900">
+                      {item.name}
+                    </h2>
+                    <p className="text-lg text-gray-700">${item.price}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleRemove(item.id)}
-                  className="text-red-600 hover:text-red-800 transition-colors"
-                >
-                  <Trash size={24} />
-                </button>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => handleAddToCart(item.id)}
+                    className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
+                  >
+                    <ShoppingCart className="inline-block mr-2" size={20} />
+                    Add to Cart
+                  </button>
+                  <button
+                    onClick={() => handleRemove(item.id)}
+                    className="text-red-500 hover:text-red-700 transition-colors"
+                  >
+                    <Trash size={24} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <Link
-            to="/shop"
-            className="inline-block bg-gradient-to-r from-purple-600 to-purple-800 text-white font-bold py-2 px-6 rounded-xl hover:from-purple-700 hover:to-purple-900 transition duration-300"
+            to="/user/product"
+            className="inline-block bg-gradient-to-r from-purple-500 to-purple-700 text-white font-bold py-3 px-8 rounded-xl hover:from-purple-600 hover:to-purple-800 transition duration-300 shadow-lg"
           >
             Continue Shopping
           </Link>

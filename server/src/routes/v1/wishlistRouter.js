@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-router.post("/add", authUser, addToWishlist);
+router.post("/add/:id", authUser, addToWishlist);
 
 router.delete("/remove/:id/:productId", authUser, removeFromWishlist);
 

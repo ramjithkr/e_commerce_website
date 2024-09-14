@@ -7,10 +7,12 @@ export const ProductDetails = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cartMessage, setCartMessage] = useState(null);
+  const [wishlistMessage, setWishlistMessage] = useState(null); // State for wishlist message
   const [quantity, setQuantity] = useState(1);
 
-  const { id } = useParams(); // productId is `id` from URL
+  const { id } = useParams(); // productId from URL
 
+  // Fetch product details on component mount
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
@@ -19,6 +21,7 @@ export const ProductDetails = () => {
           method: "GET",
           withCredentials: true,
         });
+
         if (response?.data?.data) {
           setProductDetails(response.data.data);
         } else {
@@ -35,16 +38,17 @@ export const ProductDetails = () => {
     fetchProductDetails();
   }, [id]);
 
+  // Add product to the user's cart
   const addProductToUserCart = async () => {
     try {
       const response = await axiosInstance({
-        url: `/cart/add`,
+        url: `/cart/add/${id}`,
         method: "POST",
         withCredentials: true,
-        data: { productId: id, quantity }, // Send correct productId and quantity
+        data: {  quantity }, 
       });
 
-      if (response?.data?.message === 'Product added to cart successfully') {
+      if (response?.data?.message === "Product added to cart successfully") {
         setCartMessage("Product added to cart successfully!");
       } else {
         setCartMessage("Failed to add product to cart");
@@ -55,6 +59,27 @@ export const ProductDetails = () => {
     }
   };
 
+  // Add product to wishlist
+  const addProductWishlist = async () => {
+    try {
+      const response = await axiosInstance({
+        url: `/wishlist/add/${id}`, // Product ID in URL params
+        method: "POST",
+        withCredentials: true,
+      });
+
+      if (response?.data?.message === "Product added to wishlist successfully") {
+        setWishlistMessage("Product added to wishlist successfully!");
+      } else {
+        setWishlistMessage("Failed to add product to wishlist");
+      }
+    } catch (error) {
+      console.error(error);
+      setWishlistMessage("Error adding product to wishlist");
+    }
+  };
+
+  // Loading and error states
   if (loading) {
     return <div className="text-center py-24">Loading...</div>;
   }
@@ -101,16 +126,15 @@ export const ProductDetails = () => {
                 </span>
                 <button
                   onClick={addProductToUserCart}
-                  className={`flex ml-auto text-white ${
-                    loading ? "bg-gray-500" : "bg-red-500"
-                  } border-0 py-2 px-6 focus:outline-none hover:${
-                    loading ? "bg-gray-600" : "bg-red-600"
-                  } transition-all duration-300 rounded-lg shadow-md`}
+                  className={`flex ml-auto text-white ${loading ? "bg-gray-500" : "bg-red-500"} border-0 py-2 px-6 focus:outline-none hover:${loading ? "bg-gray-600" : "bg-red-600"} transition-all duration-300 rounded-lg shadow-md`}
                   disabled={loading}
                 >
                   Add to Cart
                 </button>
-                <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 hover:text-red-500 ml-4 transition-all duration-300">
+                <button
+                  onClick={addProductWishlist} // Add to wishlist when heart is clicked
+                  className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 hover:text-red-500 ml-4 transition-all duration-300"
+                >
                   <svg
                     fill="currentColor"
                     strokeLinecap="round"
@@ -125,13 +149,16 @@ export const ProductDetails = () => {
               </div>
               {cartMessage && (
                 <p
-                  className={`mt-4 text-sm ${
-                    cartMessage.includes("success")
-                      ? "text-green-600"
-                      : "text-red-500"
-                  }`}
+                  className={`mt-4 text-sm ${cartMessage.includes("success") ? "text-green-600" : "text-red-500"}`}
                 >
                   {cartMessage}
+                </p>
+              )}
+              {wishlistMessage && (
+                <p
+                  className={`mt-4 text-sm ${wishlistMessage.includes("success") ? "text-green-600" : "text-red-500"}`}
+                >
+                  {wishlistMessage}
                 </p>
               )}
             </div>

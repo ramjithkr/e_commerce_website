@@ -31,15 +31,13 @@ const userSchema = new mongoose.Schema(
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Wishlist",
+        ref: "Product",  // Wishlist should reference Product
       },
     ],
-    product: [
+    cart: [
       {
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart", // Cart should reference Cart items
       },
     ],
   },

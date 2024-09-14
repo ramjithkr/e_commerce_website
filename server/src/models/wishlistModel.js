@@ -12,18 +12,13 @@ const wishlistSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
-    Wishlist: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "wishlist",
-      required: true,
-    },
     addedAt: {
       type: Date,
       default: Date.now,
     },
   },
   {
-    timestamps: true,
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
   }
 );
 
