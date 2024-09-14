@@ -6,21 +6,22 @@ import toast from "react-hot-toast";
 import { axiosInstance } from "../../config/axiosInstance";
 
 export const WishlistPage = () => {
-  const [product, setProduct] = useState([]);
+  const [products, setProducts] = useState([]);
 
   // Fetch wishlist products
   const fetchWishlistProducts = async () => {
     try {
       const response = await axiosInstance({
-        url: "/wishlist/wishlistdetails",
+        url: "/wishlist/get",
         method: "GET",
         withCredentials: true,
       });
       if (response?.data?.data) {
-        setProduct(response.data.data);
+        setProducts(response?.data?.data);
       } else {
-        toast.error("Product details not found");
+        toast.error("No items found in your wishlist");
       }
+      console.log(response);
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch wishlist products");
@@ -49,9 +50,9 @@ export const WishlistPage = () => {
             method: "DELETE",
             withCredentials: true,
           });
-          if (response?.data?.data) {
-            setProduct((prevProducts) =>
-              prevProducts.filter((item) => item.id !== id)
+          if (response?.data?.success) {
+            setProducts((prevProducts) =>
+              prevProducts.filter((item) => item._id !== id)
             );
             Swal.fire("Removed!", "Your item has been removed.", "success");
           } else {
@@ -73,7 +74,7 @@ export const WishlistPage = () => {
         method: "POST",
         withCredentials: true,
       });
-      if (response?.data?.data) {
+      if (response?.data?.success) {
         Swal.fire({
           icon: "success",
           title: "Added to Cart",
@@ -96,40 +97,42 @@ export const WishlistPage = () => {
         <h1 className="text-5xl font-bold text-gray-900 mb-8 text-center">
           Your Wishlist
         </h1>
-        {product.length === 0 ? (
+        {products.length === 0 ? (
           <p className="text-lg text-gray-600 text-center">
             Your wishlist is empty. Start adding your favorite products!
           </p>
         ) : (
           <div className="space-y-8">
-            {product.map((item) => (
+            {products.map((item) => (
               <div
-                key={item.id}
+                key={item._id}
                 className="flex items-center justify-between p-6 border border-gray-200 rounded-xl shadow-lg bg-gradient-to-tr from-green-50 to-white"
               >
                 <div className="flex items-center gap-6">
                   <img
-                    src={item.image}
-                    alt={item.name}
+                    src={item.product.image} // Assuming 'product' is the field containing product details
+                    alt={item.product.name}
                     className="w-20 h-20 object-cover rounded-xl shadow-sm"
                   />
                   <div>
                     <h2 className="text-2xl font-semibold text-gray-900">
-                      {item.name}
+                      {item.product.name}
                     </h2>
-                    <p className="text-lg text-gray-700">${item.price}</p>
+                    <p className="text-lg text-gray-700">
+                      ${item.product.price}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <button
-                    onClick={() => handleAddToCart(item.id)}
+                    onClick={() => handleAddToCart(item.product._id)}
                     className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
                   >
                     <ShoppingCart className="inline-block mr-2" size={20} />
                     Add to Cart
                   </button>
                   <button
-                    onClick={() => handleRemove(item.id)}
+                    onClick={() => handleRemove(item._id)}
                     className="text-red-500 hover:text-red-700 transition-colors"
                   >
                     <Trash size={24} />

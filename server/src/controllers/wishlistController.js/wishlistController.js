@@ -14,18 +14,24 @@ export const addToWishlist = async (req, res) => {
     // Ensure the user is identified by their email
     const userExists = await User.findOne({ email: user.email });
     if (!userExists) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // Validate the productId
     if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ success: false, message: "Invalid product ID" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid product ID" });
     }
 
     // Find the product in the database
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     // Check if the product is already in the wishlist
@@ -34,7 +40,9 @@ export const addToWishlist = async (req, res) => {
       product: productId,
     });
     if (existingWishlistItem) {
-      return res.status(400).json({ success: false, message: "Product already in wishlist" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Product already in wishlist" });
     }
 
     // Create a new wishlist entry
@@ -55,10 +63,11 @@ export const addToWishlist = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in addToWishlist:", error);
-    return res.status(500).json({ success: false, message: "Server error", error });
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error });
   }
 };
-
 
 export const removeFromWishlist = async (req, res) => {
   try {
@@ -91,21 +100,22 @@ export const removeFromWishlist = async (req, res) => {
 
 export const getWishlist = async (req, res) => {
   try {
-    const { id } = req.params;
+    const user = req.user;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "Invalid user ID" });
+    // Use findOne to search by email
+    const userDocument = await User.findOne({ email: user.email }).populate(
+      "wishlist"
+    );
+
+    if (!userDocument) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const wishlist = await Wishlist.find({ user: id }).populate("product");
-
-    if (!wishlist || wishlist.length === 0) {
-      return res.status(404).json({ message: "No items in wishlist" });
-    }
-
-    res.status(200).json({ wishlist });
+    // Send the wishlist data in the response
+    res.status(200).json({ data: userDocument.wishlist });
+    console.log(userDocument.wishlist);
   } catch (error) {
     console.error("Error in getWishlist:", error);
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

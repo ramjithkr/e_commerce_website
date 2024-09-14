@@ -23,7 +23,8 @@ import { AdminDashboardLayout } from "../layouts/AdminDashboardLayout";
 import { CrudProduct } from "../pages/admin/CrudProduct";
 import { UpadteOders } from "../pages/admin/UpadteOders";
 import { UpdateProduct } from "../pages/admin/UpdateProduct";
-import { WishlistPage } from "../pages/admin/GetUsersList";
+import { WishlistPage } from "../pages/user/WishlistPage";
+
 
 export const router = createBrowserRouter([
   {
