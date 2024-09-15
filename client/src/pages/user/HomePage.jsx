@@ -1,19 +1,19 @@
-// import { DisplayImages1 } from "../Home/DisplayImages1";
-// import { MensPendent } from "../Home/MensPendent";
-// import { Carousel } from "./../Home/Carousel";
+import { DisplayImages1 } from "../Home/DisplayImages1";
+import { MensPendent } from "../Home/MensPendent";
+import { Carousel } from "./../Home/Carousel";
 
-import { WebAnalyticsDashboard } from "../Home/adminHome/WebAnalytics";
+// import { WebAnalyticsDashboard } from "../Home/adminHome/WebAnalytics";
 
 
 
 export const HomePage = () => {
   return (
     <div>
-      <WebAnalyticsDashboard/>
+      {/* <WebAnalyticsDashboard/> */}
   
-      {/* <Carousel />
+       <Carousel /> 
       <MensPendent />
-      <DisplayImages1 /> */}
+      <DisplayImages1 /> 
     </div>
   );
 };

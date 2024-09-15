@@ -3,6 +3,7 @@ import { authUser } from "../../middlewares/authUser.js";
 import {
   addProductToCart,
   getCartList,
+  removeCartItem,
 } from "../../controllers/cartController/cartController.js";
 
 const router = express.Router();
@@ -11,6 +12,8 @@ const router = express.Router();
 router.post(`/add/:id`, authUser, addProductToCart);
 
 router.get("/cartdetails", authUser, getCartList);
+
+router.delete("/remove/:id", authUser, removeCartItem);
 
 // Additional routes...
 export default router;

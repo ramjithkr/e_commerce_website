@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 import { axiosInstance } from './../../config/axiosInstance';
-
 
 export const CartPage = () => {
   const [cartProduct, setCartProduct] = useState([]);
@@ -10,18 +9,20 @@ export const CartPage = () => {
   const fetchCartProducts = async () => {
     try {
       const response = await axiosInstance({
-        url: '/cart/cartdetails',
-        method: 'GET',
+        url: "/cart/cartdetails",
+        method: "GET",
         withCredentials: true,
       });
-      if (response?.data?.data) {
-        setCartProduct(response?.data?.data); // Assuming cart details are in `data.items`
+
+      if (response?.data?.data?.cart) {
+        const allCartItems = response.data.data.cart.flatMap(cart => cart.items);
+        setCartProduct(allCartItems);
       } else {
-        setError('Product details not found');
+        setError("Product details not found");
       }
     } catch (error) {
-      console.error(error);
-      setError('Failed to fetch product details');
+      console.error("Failed to fetch product details:", error);
+      setError("Failed to fetch product details");
     }
   };
 
@@ -29,83 +30,120 @@ export const CartPage = () => {
     fetchCartProducts();
   }, []);
 
-  const handleRemoveProduct = (productId) => {
-    console.log(`Removing product with id: ${productId}`);
-    // Implement the logic to remove the product from the cart
+  // Handle Remove Product from Cart
+  const handleRemoveProduct = async (id) => {
+    try {
+      const response = await axiosInstance({
+        url: `/cart/remove/${id}`,
+        method: "DELETE",  // Use DELETE method for removing
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        // Remove the product from local state after successfully removing from server
+        setCartProduct((prev) => prev.filter(product => product.product._id !== id));
+      }
+    } catch (error) {
+      console.error("Failed to remove product:", error);
+      setError("Failed to remove product");
+    }
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-screen h-full px-14 py-7">
-      {/* My Cart Section */}
-      <div className="w-full flex flex-col h-fit gap-4 p-4">
-        <p className="text-blue-900 text-xl font-extrabold">My cart</p>
-        
-        {/* Display error message */}
-        {error && <p className="text-red-500">{error}</p>}
+    <div className="min-h-screen bg-gray-100 pt-20">
+      <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
 
-        {/* Display products if cartProduct is not empty */}
-        {cartProduct.length > 0 ? (
-          cartProduct.map((product) => (
-            <div key={product.product._id} className="flex flex-col p-4 text-lg font-semibold shadow-md border rounded-sm">
-              <div className="flex flex-col md:flex-row gap-3 justify-between">
-                {/* Product Information */}
-                <div className="flex flex-row gap-6 items-center">
-                  <div className="w-28 h-28">
-                    <img className="w-full h-full" src={product.product.image} alt={product.product.title} />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-lg text-gray-800 font-semibold">{product.product.title}</p>
-                    <p className="text-xs text-gray-600 font-semibold">
-                      Color: <span className="font-normal">{product.color}</span>
-                    </p>
-                    <p className="text-xs text-gray-600 font-semibold">
-                      Size: <span className="font-normal">{product.size}</span>
-                    </p>
-                  </div>
+      <div className="mx-auto max-w-5xl px-6 md:flex md:space-x-6 xl:px-0">
+        {/* Cart Items Section */}
+        <div className="rounded-lg md:w-2/3">
+          {error ? (
+            <p className="text-red-500">{error}</p>
+          ) : cartProduct.length > 0 ? (
+            cartProduct.map((product) => (
+              <div
+                key={product.product._id}
+                className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start"
+              >
+                {/* Image Container */}
+                <div className="w-full sm:w-40">
+                  <img
+                    src={product.product.image}
+                    alt={product.product.title}
+                    className="w-full rounded-lg"
+                  />
                 </div>
-                {/* Price Information */}
-                <div className="self-center text-center">
-                  <p className="text-gray-600 font-normal text-sm line-through">
-                    ${product.product.originalPrice}
-                    <span className="text-emerald-500 ml-2">({product.product.discount}% OFF)</span>
-                  </p>
-                  <p className="text-gray-800 font-normal text-xl">${product.product.price}</p>
-                </div>
-                {/* Remove Product Icon */}
-                <div className="self-center">
-                  <button onClick={() => handleRemoveProduct(product.product._id)}>
-                    <svg height="24px" width="24px" viewBox="0 0 512 512">
-                      <path d="M64 160l26 320c2.2 17 16.5 30 33.5 30h265c17 0 31.3-13 33.5-30l26-320H64zm278.8 289.6c-.5 8.4-7.5 15-15.9 15h-128c-8.4 0-15.4-6.6-15.9-15L171.8 192h168.5l2.5 257.6zM352 112l-9.4-28.2c-4.5-13.5-17-22.5-31-22.5H200.4c-14 0-26.5 9-31 22.5L160 112H64v32h384v-32H352zM272 256h-32v128h32V256zm-64 0h-32v128h32V256zm128 0h-32v128h32V256z" />
-                    </svg>
-                  </button>
+
+                <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
+                  <div className="mt-5 sm:mt-0">
+                    <h2 className="text-lg font-bold text-gray-900">
+                      {product.product.title}
+                    </h2>
+                  </div>
+                  <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
+                    <div className="flex items-center border-gray-100">
+                      <span className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-white">
+                        -
+                      </span>
+                      <input
+                        className="h-8 w-8 border bg-white text-center text-xs outline-none"
+                        type="number"
+                        readOnly
+                        value={product.quantity}
+                        min={1}
+                      />
+                      <span className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-white">
+                        +
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <p className="text-sm">${product.product.price}</p>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
+                        onClick={() => handleRemoveProduct(product.product._id)}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </div>
-              {/* Product Quantity */}
-              <div className="flex flex-row self-center gap-1">
-                <button className="w-5 h-5 self-center rounded-full border border-gray-300">
-                  {/* Decrement Quantity */}
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#d1d5db" strokeWidth={2}>
-                    <path d="M5 12h14" />
-                  </svg>
-                </button>
-                <input
-                  type="text"
-                  readOnly
-                  value={product.quantity}
-                  className="w-8 h-8 text-center text-gray-900 text-sm outline-none border border-gray-300 rounded-sm"
-                />
-                <button className="w-5 h-5 self-center rounded-full border border-gray-300">
-                  {/* Increment Quantity */}
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#9ca3af" strokeWidth={2}>
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                </button>
-              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">Your cart is empty</p>
+          )}
+        </div>
+
+        {/* Subtotal Section */}
+        <div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
+          <div className="mb-2 flex justify-between">
+            <p className="text-gray-700">Subtotal</p>
+            <p className="text-gray-700">$129.99</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="text-gray-700">Shipping</p>
+            <p className="text-gray-700">$4.99</p>
+          </div>
+          <hr className="my-4" />
+          <div className="flex justify-between">
+            <p className="text-lg font-bold">Total</p>
+            <div>
+              <p className="mb-1 text-lg font-bold">$134.98 USD</p>
+              <p className="text-sm text-gray-700">including VAT</p>
             </div>
-          ))
-        ) : (
-          <p className="text-gray-500">Your cart is empty</p>
-        )}
+          </div>
+          <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-white hover:bg-blue-600">
+            Check out
+          </button>
+        </div>
       </div>
     </div>
   );
