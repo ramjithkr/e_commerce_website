@@ -45,7 +45,7 @@ export const ProductDetails = () => {
         url: `/cart/add/${id}`,
         method: "POST",
         withCredentials: true,
-        data: {  quantity }, 
+        data: { quantity },
       });
 
       if (response?.data?.message === "Product added to cart successfully") {
@@ -68,7 +68,9 @@ export const ProductDetails = () => {
         withCredentials: true,
       });
 
-      if (response?.data?.message === "Product added to wishlist successfully") {
+      if (
+        response?.data?.message === "Product added to wishlist successfully"
+      ) {
         setWishlistMessage("Product added to wishlist successfully!");
       } else {
         setWishlistMessage("Failed to add product to wishlist");
@@ -126,7 +128,11 @@ export const ProductDetails = () => {
                 </span>
                 <button
                   onClick={addProductToUserCart}
-                  className={`flex ml-auto text-white ${loading ? "bg-gray-500" : "bg-red-500"} border-0 py-2 px-6 focus:outline-none hover:${loading ? "bg-gray-600" : "bg-red-600"} transition-all duration-300 rounded-lg shadow-md`}
+                  className={`flex ml-auto text-white ${
+                    loading ? "bg-gray-500" : "bg-red-500"
+                  } border-0 py-2 px-6 focus:outline-none hover:${
+                    loading ? "bg-gray-600" : "bg-red-600"
+                  } transition-all duration-300 rounded-lg shadow-md`}
                   disabled={loading}
                 >
                   Add to Cart
@@ -149,14 +155,22 @@ export const ProductDetails = () => {
               </div>
               {cartMessage && (
                 <p
-                  className={`mt-4 text-sm ${cartMessage.includes("success") ? "text-green-600" : "text-red-500"}`}
+                  className={`mt-4 text-sm ${
+                    cartMessage.includes("success")
+                      ? "text-green-600"
+                      : "text-red-500"
+                  }`}
                 >
                   {cartMessage}
                 </p>
               )}
               {wishlistMessage && (
                 <p
-                  className={`mt-4 text-sm ${wishlistMessage.includes("success") ? "text-green-600" : "text-red-500"}`}
+                  className={`mt-4 text-sm ${
+                    wishlistMessage.includes("success")
+                      ? "text-green-600"
+                      : "text-red-500"
+                  }`}
                 >
                   {wishlistMessage}
                 </p>

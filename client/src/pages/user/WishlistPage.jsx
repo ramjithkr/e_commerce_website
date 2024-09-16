@@ -7,7 +7,7 @@ import { axiosInstance } from "../../config/axiosInstance";
 
 export const WishlistPage = () => {
   const [products, setProducts] = useState([]);
-
+  console.log("products===>", products);
   // Fetch wishlist products
   const fetchWishlistProducts = async () => {
     try {
@@ -66,24 +66,19 @@ export const WishlistPage = () => {
     });
   };
 
-  // Add item to cart
-  const handleAddToCart = async (id) => {
+  const addProductToUserCart = async (id, quantity = 1) => {
     try {
       const response = await axiosInstance({
         url: `/cart/add/${id}`,
         method: "POST",
         withCredentials: true,
+        data: { quantity }, // you can change this depending on your API requirements
       });
-      if (response?.data?.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Added to Cart",
-          text: "This product has been added to your cart.",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+
+      if (response?.data?.message === "Product added to cart successfully") {
+        toast.success("Product added to cart successfully!");
       } else {
-        toast.error("Failed to add item to cart");
+        toast.error("Failed to add product to cart");
       }
     } catch (error) {
       console.error(error);
@@ -125,12 +120,13 @@ export const WishlistPage = () => {
                 </div>
                 <div className="flex items-center gap-4">
                   <button
-                    onClick={() => handleAddToCart(item.product._id)}
+                    onClick={() => addProductToUserCart(item.product._id)}
                     className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
                   >
                     <ShoppingCart className="inline-block mr-2" size={20} />
                     Add to Cart
                   </button>
+
                   <button
                     onClick={() => handleRemove(item._id)}
                     className="text-red-500 hover:text-red-700 transition-colors"

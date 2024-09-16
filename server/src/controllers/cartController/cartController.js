@@ -100,15 +100,13 @@ export const getCartList = async (req, res) => {
   }
 };
 
-
-
 export const removeCartItem = async (req, res) => {
   try {
     const { id } = req.params;
     const user = req.user;
 
-    console.log("User email:", user.email);  // Debugging to check email
-    console.log("Product ID to remove:", id);  // Debugging to check product ID
+    console.log("User email:", user.email); // Debugging to check email
+    console.log("Product ID to remove:", id); // Debugging to check product ID
 
     // const cart = await Cart.findOne({ email: user.email });
     const cart = await User.findOne({ email: user.email }).populate({
@@ -119,13 +117,12 @@ export const removeCartItem = async (req, res) => {
       },
     });
 
-  
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
 
     // Proceed to remove item
-    cart.items = cart.items.filter(item => item.product.toString() !== id);
+    cart.items = cart.items.filter((item) => item.product.toString() !== id);
     await cart.save();
 
     res.status(200).json({ message: "Product removed from cart" });
@@ -134,4 +131,3 @@ export const removeCartItem = async (req, res) => {
     res.status(500).json({ error: "Failed to remove product" });
   }
 };
- 

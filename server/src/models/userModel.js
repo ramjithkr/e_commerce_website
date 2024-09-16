@@ -31,13 +31,13 @@ const userSchema = new mongoose.Schema(
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "wishlist",  // Wishlist should reference Product
+        ref: "Wishlist", // Reference to Wishlist model
       },
     ],
     product: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "product",  // Wishlist should reference Product
+        ref: "product", // Wishlist should reference Product
       },
     ],
     cart: [
