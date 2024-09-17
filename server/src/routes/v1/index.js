@@ -5,6 +5,7 @@ import adminRouter from './adminRouter.js'
 import cartRouter from "./cartRouter.js";
 import wishlistRouter from "./wishlistRouter.js";
 import ratingRouter from "./ratingRouter.js";
+import paymentRouter from "./paymentRouter.js";
 
 const v1Router = express.Router();
 
@@ -14,5 +15,6 @@ v1Router.use("/admin",adminRouter);
 v1Router.use("/cart", cartRouter);
 v1Router.use("/wishlist", wishlistRouter);
 v1Router.use("/rating", ratingRouter);
+v1Router.use("/payment",paymentRouter);
 
 export default v1Router;

@@ -1,40 +1,45 @@
+import { useEffect, useState, useRef } from "react";
 import necklaceImage from "../../assets/carosel/elegant.avif";
-import { useEffect, useState } from "react";
-
-
-
-
-
-// running display
 
 export const Carousel = () => {
   const [activeSlide, setActiveSlide] = useState(1);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // setActiveSlide((prevSlide) => (prevSlide === 4 ? 1 : prevSlide + 1));
-    }, 5000); // 5 seconds
+      setActiveSlide((prevSlide) => (prevSlide === 4 ? 1 : prevSlide + 1));
+    }, 4000); // 4 seconds
 
     return () => clearInterval(interval); // Clean up on component unmount
   }, []);
 
-  // Scroll to the active slide
   useEffect(() => {
-    const slide = document.getElementById(`item${activeSlide}`);
-    if (slide) {
-      slide.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "start",
-      });
-    }
+    const handleScroll = () => {
+      if (carouselRef.current) {
+        const rect = carouselRef.current.getBoundingClientRect();
+        const inViewport = rect.top >= 0 && rect.bottom <= window.innerHeight;
+        if (inViewport) {
+          const slide = document.getElementById(`item${activeSlide}`);
+          if (slide) {
+            slide.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+              inline: "start",
+            });
+          }
+        }
+      }
+    };
+
+    handleScroll(); // Check if the carousel is in view on initial render
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [activeSlide]);
 
   return (
-    <div>
+    <div ref={carouselRef}>
       <div className="carousel w-full h-64">
-        {" "}
-        {/* Set a fixed height */}
         <div id="item1" className="carousel-item w-full h-full">
           <img
             src={necklaceImage}
@@ -94,4 +99,3 @@ export const Carousel = () => {
     </div>
   );
 };
-

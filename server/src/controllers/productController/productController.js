@@ -154,3 +154,21 @@ export const getProductById = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+
+
+// root hompage getRootProduct
+
+
+export const getRootProduct = async (req, res) => {
+  try {
+    const productList = await Product.find();
+    res.status(200).json({
+      success: true,
+      message: "fetche product list",
+      data: productList,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+}

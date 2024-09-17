@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { axiosInstance } from './../../config/axiosInstance';
+import { axiosInstance } from "./../../config/axiosInstance";
+import { loadStripe } from "@stripe/stripe-js";
 
 export const CartPage = () => {
   const [cartProduct, setCartProduct] = useState([]);
   const [error, setError] = useState(null);
-
+console.log("cartproduct===",cartProduct)
   // Fetch Cart Products
   const fetchCartProducts = async () => {
     try {
@@ -15,7 +16,9 @@ export const CartPage = () => {
       });
 
       if (response?.data?.data?.cart) {
-        const allCartItems = response.data.data.cart.flatMap(cart => cart.items);
+        const allCartItems = response.data.data.cart.flatMap(
+          (cart) => cart.items
+        );
         setCartProduct(allCartItems);
       } else {
         setError("Product details not found");
@@ -35,17 +38,65 @@ export const CartPage = () => {
     try {
       const response = await axiosInstance({
         url: `/cart/remove/${id}`,
-        method: "DELETE",  // Use DELETE method for removing
+        method: "DELETE",
         withCredentials: true,
       });
 
       if (response.status === 200) {
-        // Remove the product from local state after successfully removing from server
-        setCartProduct((prev) => prev.filter(product => product.product._id !== id));
+        setCartProduct((prev) =>
+          prev.filter((product) => product.product._id !== id)
+        );
       }
     } catch (error) {
       console.error("Failed to remove product:", error);
       setError("Failed to remove product");
+    }
+  };
+
+  // Handle Quantity Change
+  const handleQuantityChange = (id, delta) => {
+    setCartProduct((prevCart) =>
+      prevCart.map((product) =>
+        product.product._id === id
+          ? { ...product, quantity: Math.max(1, product.quantity + delta) }
+          : product
+      )
+    );
+  };
+
+  // Calculate Subtotal
+  const subtotal = cartProduct.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+  const shipping = 4.99;
+  const total = subtotal + shipping;
+
+  // Handle Payment
+  const makePayment = async () => {
+    try {
+      const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLR_KEY);
+
+      const response = await axiosInstance({
+        url: "/payment/create-checkout-session",
+        method: "POST",
+        data: { products: cartProduct }, // Sending cartProduct as products info
+      });
+
+      const sessionId = response?.data?.sessionId;
+
+      if (!sessionId) {
+        console.error("Failed to create a checkout session.");
+        return;
+      }
+
+      const result = await stripe.redirectToCheckout({ sessionId });
+
+      if (result.error) {
+        console.error("Stripe Checkout Error:", result.error.message);
+      }
+    } catch (error) {
+      console.error("Payment Error:", error);
     }
   };
 
@@ -75,13 +126,20 @@ export const CartPage = () => {
 
                 <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
                   <div className="mt-5 sm:mt-0">
-                    <h2 className="text-lg font-bold text-gray-900">
-                      {product.product.title}
-                    </h2>
+                    {product.product?.title && (
+                      <h2 className="text-lg font-bold text-gray-900">
+                        {product.product.title}
+                      </h2>
+                    )}
                   </div>
                   <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
                     <div className="flex items-center border-gray-100">
-                      <span className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-white">
+                      <span
+                        className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-white"
+                        onClick={() =>
+                          handleQuantityChange(product.product._id, -1)
+                        }
+                      >
                         -
                       </span>
                       <input
@@ -91,7 +149,12 @@ export const CartPage = () => {
                         value={product.quantity}
                         min={1}
                       />
-                      <span className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-white">
+                      <span
+                        className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-white"
+                        onClick={() =>
+                          handleQuantityChange(product.product._id, 1)
+                        }
+                      >
                         +
                       </span>
                     </div>
@@ -126,21 +189,21 @@ export const CartPage = () => {
         <div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
           <div className="mb-2 flex justify-between">
             <p className="text-gray-700">Subtotal</p>
-            <p className="text-gray-700">$129.99</p>
+            <p className="text-gray-700">${subtotal.toFixed(2)}</p>
           </div>
           <div className="flex justify-between">
             <p className="text-gray-700">Shipping</p>
-            <p className="text-gray-700">$4.99</p>
+            <p className="text-gray-700">${shipping.toFixed(2)}</p>
           </div>
           <hr className="my-4" />
           <div className="flex justify-between">
             <p className="text-lg font-bold">Total</p>
-            <div>
-              <p className="mb-1 text-lg font-bold">$134.98 USD</p>
-              <p className="text-sm text-gray-700">including VAT</p>
-            </div>
+            <p className="text-lg font-bold">${total.toFixed(2)} USD</p>
           </div>
-          <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-white hover:bg-blue-600">
+          <button
+            onClick={makePayment}
+            className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-white hover:bg-blue-600"
+          >
             Check out
           </button>
         </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { axiosInstance } from './../../config/axiosInstance';
+import { axiosInstance } from "./../../config/axiosInstance";
 
 export const GetUsersList = () => {
   const [userData, setUserData] = useState([]);
@@ -14,9 +14,10 @@ export const GetUsersList = () => {
           method: "GET",
           withCredentials: true,
         });
-        setUserData(response?.data?.data);
+        setUserData(response?.data?.data || []);
       } catch (error) {
         console.error("Error fetching user list:", error);
+        Swal.fire("Error", "Failed to fetch user list", "error");
       } finally {
         setLoading(false);
       }
@@ -27,15 +28,15 @@ export const GetUsersList = () => {
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     });
-  
+
     if (result.isConfirmed) {
       try {
         const response = await axiosInstance({
@@ -43,25 +44,34 @@ export const GetUsersList = () => {
           method: "DELETE",
           withCredentials: true,
         });
-  
+
         if (response.data.success) {
-          Swal.fire('Deleted!', response.data.message, 'success');
+          Swal.fire("Deleted!", response.data.message, "success");
           setUserData((prevUserData) =>
             prevUserData.filter((user) => user._id !== id)
           );
         } else {
-          // Show error if the user doesn't have permission
-          Swal.fire('Error', response.data.message, 'error');
+          Swal.fire("Error", response.data.message, "error");
         }
       } catch (error) {
         console.error("Error deleting user:", error);
-        Swal.fire('Error', 'Failed to delete user', 'error');
+        Swal.fire("Error", "Failed to delete user", "error");
       }
     }
   };
-  
+
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="spinner-border text-primary" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (userData.length === 0) {
+    return <div className="text-center p-5">No users found.</div>;
   }
 
   return (
@@ -100,6 +110,7 @@ export const GetUsersList = () => {
                 <button
                   className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200"
                   onClick={() => handleDelete(user._id)}
+                  aria-label={`Delete ${user.name}`}
                 >
                   Delete
                 </button>

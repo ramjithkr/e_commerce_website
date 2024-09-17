@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RootLayout } from "../layouts/RootLayout";
-import { HomePage } from "./../pages/user/HomePage";
 import { SignupPage } from "./../pages/user/SignupPage";
 import { UserLayout } from "../layouts/UserLayout";
 import { ProductDetails } from "../pages/user/ProductDetails";
@@ -24,6 +23,11 @@ import { CrudProduct } from "../pages/admin/CrudProduct";
 import { UpadteOders } from "../pages/admin/UpadteOders";
 import { UpdateProduct } from "../pages/admin/UpdateProduct";
 import { WishlistPage } from "../pages/user/WishlistPage";
+import { UserHomePage } from "../pages/user/UserHomePage";
+import { RootHomePage } from './../pages/root/RootHomePage';
+import { AdminHome } from "../pages/admin/adminHome";
+import { GetUsersList } from "../pages/admin/GetUsersList";
+
 
 
 export const router = createBrowserRouter([
@@ -34,7 +38,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <HomePage />,
+        element: <RootHomePage />,
       },
       {
         path: "about",
@@ -64,7 +68,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "home",
-        element: <HomePage />,
+        element: <UserHomePage />,
       },
       {
         path: "about",
@@ -112,7 +116,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "home",
-        element: <HomePage />,
+        element: <AdminHome/>
       },
 
       {
@@ -150,7 +154,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "get-users-details",
-            element: <getUsersList/>,
+            element: <GetUsersList/>,
           },
         ],
       },

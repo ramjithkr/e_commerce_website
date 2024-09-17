@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 // for users
 
-export const UserMensPendent = () => {
+export const UserMensBracelete = () => {
   const [products, setProducts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null); // State for selected image
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
@@ -31,7 +31,7 @@ export const UserMensPendent = () => {
 
   // Filter products based on category
   const filteredProducts = products.filter(
-    (product) => product.category.toLowerCase() === "mens-pendant"
+    (product) => product.category.toLowerCase() === "mens-bracelete"
   );
 
   const handleImageClick = (imageUrl) => {
@@ -54,7 +54,7 @@ export const UserMensPendent = () => {
   return (
     <div className="relative overflow-hidden">
       {/* Caption */}
-      <h2 className="text-4xl font-bold text-center mb-8">Mens Pendant</h2>
+      <h2 className="text-4xl font-bold text-center mb-8">Mens Bracelete</h2>
       <div className="flex overflow-x-auto no-scrollbar p-8">
         <div className="flex gap-8">
           {filteredProducts.map((product) => (
@@ -108,7 +108,7 @@ export const UserMensPendent = () => {
 
 // for root users
 
-export const RootMensPendent = () => {
+export const RootMensBracelete = () => {
   const [products, setProducts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null); // State for selected image
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
@@ -134,7 +134,7 @@ export const RootMensPendent = () => {
 
   // Filter products based on category
   const filteredProducts = products.filter(
-    (product) => product.category.toLowerCase() === "mens-pendant"
+    (product) => product.category.toLowerCase() === "mens-bracelete"
   );
 
   const handleImageClick = (imageUrl) => {
@@ -157,7 +157,7 @@ export const RootMensPendent = () => {
   return (
     <div className="relative overflow-hidden">
       {/* Caption */}
-      <h2 className="text-4xl font-bold text-center mb-8">Mens Pendant</h2>
+      <h2 className="text-4xl font-bold text-center mb-8">Mens Bracelete</h2>
       <div className="flex overflow-x-auto no-scrollbar p-8">
         <div className="flex gap-8">
           {filteredProducts.map((product) => (
