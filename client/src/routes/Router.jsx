@@ -25,8 +25,8 @@ import { UpdateProduct } from "../pages/admin/UpdateProduct";
 import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserHomePage } from "../pages/user/UserHomePage";
 import { RootHomePage } from './../pages/root/RootHomePage';
-import { AdminHome } from "../pages/admin/adminHome";
 import { GetUsersList } from "../pages/admin/GetUsersList";
+import { AdminHome } from "../pages/admin/adminHome";
 
 
 
