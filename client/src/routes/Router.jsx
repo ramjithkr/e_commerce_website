@@ -24,10 +24,9 @@ import { UpadteOders } from "../pages/admin/UpadteOders";
 import { UpdateProduct } from "../pages/admin/UpdateProduct";
 import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserHomePage } from "../pages/user/UserHomePage";
-import { RootHomePage } from './../pages/root/RootHomePage';
+import { RootHomePage } from "./../pages/root/RootHomePage";
 import { GetUsersList } from "../pages/admin/GetUsersList";
-import { AdminHome } from "../pages/admin/adminHome";
-
+import { HomeAdmin } from './../pages/admin/HomeAdmin';
 
 
 export const router = createBrowserRouter([
@@ -116,7 +115,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "home",
-        element: <AdminHome/>
+        element: <HomeAdmin/>,
       },
 
       {
@@ -146,15 +145,15 @@ export const router = createBrowserRouter([
           },
           {
             path: "update-user-oders",
-            element: <UpadteOders />,   ///  not complete
+            element: <UpadteOders />, ///  not complete
           },
           {
             path: "update-product/:id",
-            element: <UpdateProduct />,   // not completed error in cloudnery
+            element: <UpdateProduct />, // not completed error in cloudnery
           },
           {
             path: "get-users-details",
-            element: <GetUsersList/>,
+            element: <GetUsersList />,
           },
         ],
       },
