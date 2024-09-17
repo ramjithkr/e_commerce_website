@@ -5,7 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 export const CartPage = () => {
   const [cartProduct, setCartProduct] = useState([]);
   const [error, setError] = useState(null);
-console.log("cartproduct===",cartProduct)
+
   // Fetch Cart Products
   const fetchCartProducts = async () => {
     try {
@@ -54,14 +54,28 @@ console.log("cartproduct===",cartProduct)
   };
 
   // Handle Quantity Change
-  const handleQuantityChange = (id, delta) => {
-    setCartProduct((prevCart) =>
-      prevCart.map((product) =>
-        product.product._id === id
-          ? { ...product, quantity: Math.max(1, product.quantity + delta) }
+  const handleQuantityChange = async (productId, change) => {
+    try {
+      const updatedCart = cartProduct.map((product) =>
+        product.product._id === productId
+          ? { ...product, quantity: product.quantity + change }
           : product
-      )
-    );
+      );
+
+      // Update local state
+      setCartProduct(updatedCart);
+
+      // Update quantity on the server
+      await axiosInstance({
+        url: `/cart/update/${productId}`,
+        method: "PATCH",
+        data: { quantity: updatedCart.find((p) => p.product._id === productId).quantity },
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
+      setError("Failed to update quantity");
+    }
   };
 
   // Calculate Subtotal
@@ -75,8 +89,15 @@ console.log("cartproduct===",cartProduct)
   // Handle Payment
   const makePayment = async () => {
     try {
-      const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLR_KEY);
+      const stripePublishableKey = import.meta.env.VITE_STRIPE_Publishable_key;
+      if (!stripePublishableKey) {
+        throw new Error("Stripe publishable key is not defined");
+      }
 
+      // Initialize Stripe with the publishable key
+      const stripe = await loadStripe(stripePublishableKey);
+
+      // Create a checkout session
       const response = await axiosInstance({
         url: "/payment/create-checkout-session",
         method: "POST",
@@ -90,6 +111,7 @@ console.log("cartproduct===",cartProduct)
         return;
       }
 
+      // Redirect to Stripe Checkout
       const result = await stripe.redirectToCheckout({ sessionId });
 
       if (result.error) {

@@ -1,7 +1,9 @@
-import Cart from "../../models/cartModel.js";
+
 import { Product } from "../../models/productModel.js";
 import mongoose from "mongoose";
 import { User } from "../../models/userModel.js";
+import { Cart } from "../../models/cartModel.js";
+
 
 export const addProductToCart = async (req, res) => {
   try {
@@ -100,34 +102,49 @@ export const getCartList = async (req, res) => {
   }
 };
 
+
+
+
+
 export const removeCartItem = async (req, res) => {
+  const { id } = req.params; // Product ID to remove
+  const loggedInUser = req.user; // Get the user from authentication middleware
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid product ID" });
+  }
+
   try {
-    const { id } = req.params;
-    const user = req.user;
+    // Find the user
+    const user = await User.findOne({ email: loggedInUser.email });
 
-    console.log("User email:", user.email); // Debugging to check email
-    console.log("Product ID to remove:", id); // Debugging to check product ID
-
-    // const cart = await Cart.findOne({ email: user.email });
-    const cart = await User.findOne({ email: user.email }).populate({
-      path: "cart",
-      populate: {
-        path: "items.product", // Populate product details in the cart items
-        model: "Product", // Ensure Product model is referenced correctly
-      },
-    });
-
-    if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Proceed to remove item
-    cart.items = cart.items.filter((item) => item.product.toString() !== id);
-    await cart.save();
+    // Convert product ID to ObjectId
+    const productId = mongoose.Types.ObjectId(id);
 
-    res.status(200).json({ message: "Product removed from cart" });
+    // Find and update the cart by pulling the specific product from 'items' array
+    const updatedCart = await Cart.findOneAndUpdate(
+      { user: user._id }, // Find the cart for the user
+      { $pull: { items: { product: productId } } }, // Remove the product from the 'items' array
+      { new: true } // Return the updated document
+    );
+
+    if (updatedCart) {
+      return res.status(200).json({
+        message: "Product removed from cart",
+        data: updatedCart, // Return the updated cart
+      });
+    } else {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
   } catch (error) {
     console.error("Error removing product:", error);
-    res.status(500).json({ error: "Failed to remove product" });
+    return res.status(500).json({
+      error: "Failed to remove product from cart",
+      details: error.message // Include error message for better debugging
+    });
   }
 };

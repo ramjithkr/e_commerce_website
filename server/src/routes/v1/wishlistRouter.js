@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/add/:id", authUser, addToWishlist);
 
-router.delete("/remove/:id/:productId", authUser, removeFromWishlist);
+router.delete("/remove/:id", authUser, removeFromWishlist);
 
 router.get("/get", authUser, getWishlist);
 

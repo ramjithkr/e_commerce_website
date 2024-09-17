@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,  } from "react-router-dom";
 import { Trash, ShoppingCart } from "lucide-react";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
@@ -7,7 +7,7 @@ import { axiosInstance } from "../../config/axiosInstance";
 
 export const WishlistPage = () => {
   const [products, setProducts] = useState([]);
-  console.log("products===>", products);
+
   // Fetch wishlist products
   const fetchWishlistProducts = async () => {
     try {
@@ -21,7 +21,6 @@ export const WishlistPage = () => {
       } else {
         toast.error("No items found in your wishlist");
       }
-      console.log(response);
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch wishlist products");
@@ -31,7 +30,6 @@ export const WishlistPage = () => {
   useEffect(() => {
     fetchWishlistProducts();
   }, []);
-
   // Remove item from wishlist
   const handleRemove = async (id) => {
     Swal.fire({
@@ -50,9 +48,9 @@ export const WishlistPage = () => {
             method: "DELETE",
             withCredentials: true,
           });
-          if (response?.data?.success) {
+          if (response?.data?.message === "Product removed from wishlist") {
             setProducts((prevProducts) =>
-              prevProducts.filter((item) => item._id !== id)
+              prevProducts.filter((item) => item.product._id !== id)
             );
             Swal.fire("Removed!", "Your item has been removed.", "success");
           } else {
@@ -72,7 +70,7 @@ export const WishlistPage = () => {
         url: `/cart/add/${id}`,
         method: "POST",
         withCredentials: true,
-        data: { quantity }, // you can change this depending on your API requirements
+        data: { quantity },
       });
 
       if (response?.data?.message === "Product added to cart successfully") {
@@ -105,7 +103,7 @@ export const WishlistPage = () => {
               >
                 <div className="flex items-center gap-6">
                   <img
-                    src={item.product.image} // Assuming 'product' is the field containing product details
+                    src={item.product.image}
                     alt={item.product.name}
                     className="w-20 h-20 object-cover rounded-xl shadow-sm"
                   />
@@ -128,7 +126,7 @@ export const WishlistPage = () => {
                   </button>
 
                   <button
-                    onClick={() => handleRemove(item._id)}
+                    onClick={() => handleRemove(item.product._id)}
                     className="text-red-500 hover:text-red-700 transition-colors"
                   >
                     <Trash size={24} />

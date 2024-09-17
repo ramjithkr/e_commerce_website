@@ -4,35 +4,41 @@ import { Product } from "../../models/productModel.js";
 import { Wishlist } from "../../models/wishlistModel.js";
 
 export const removeFromWishlist = async (req, res) => {
-  try {
-    const { id, productId } = req.params;
+  const { id } = req.params; // Product ID to remove
+  const loggedInUser = req.user; // Get the user from authentication middleware
 
-    if (
-      !mongoose.Types.ObjectId.isValid(id) ||
-      !mongoose.Types.ObjectId.isValid(productId)
-    ) {
-      return res.status(400).json({ message: "Invalid user or product ID" });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid product ID" });
+  }
+
+  try {
+    // Find the user
+    const user = await User.findOne({ email: loggedInUser.email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const wishlistItem = await Wishlist.findOneAndDelete({
-      user: id,
-      product: productId,
+    // Find and remove the product from the wishlist
+    const updatedWishlist = await Wishlist.findOneAndDelete({
+      user: user._id,
+      product: id, // Match the product to remove from the wishlist
     });
 
-    if (!wishlistItem) {
+    if (updatedWishlist) {
+      return res.status(200).json({
+        message: "Product removed from wishlist",
+      });
+    } else {
       return res.status(404).json({ message: "Product not found in wishlist" });
     }
-
-    res
-      .status(200)
-      .json({ message: "Product removed from wishlist", data: wishlistItem });
   } catch (error) {
-    console.error("Error in removeFromWishlist:", error);
-    res.status(500).json({ message: "Server error", error });
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: "Error removing product from wishlist" });
   }
 };
-
-
 
 export const getWishlist = async (req, res) => {
   try {
@@ -55,7 +61,6 @@ export const getWishlist = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 export const addToWishlist = async (req, res) => {
   try {

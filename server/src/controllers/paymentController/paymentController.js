@@ -1,28 +1,43 @@
 import Stripe from "stripe";
 
+const client_domain = process.env.CLIENT_DOMAIN;
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_API_KEY);
-const client_domain = process.env.CLIENT_DOMAIN
-
-
 
 export const createCheckoutSession = async (req, res, next) => {
   try {
     const { products } = req.body;
 
-    if (!products) {
-      return res.status(400).json({ message: "Products are required" });
+    // Log products for debugging
+    console.log("Products received:", products);
+
+    // Validate products data
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({ error: "Invalid products data" });
     }
-    const lineItems = products.map((product) => ({
-      price_data: {
-        currency: "inr",
-        product_data: {
-          name: product.name,
-          images: [product.image],
+
+    const lineItems = products.map((item) => {
+      const { product, quantity } = item;
+
+      // Access fields from the nested product object
+      const { title, image, price } = product;
+
+      if (!title || !price || !quantity) {
+        console.error("Missing product fields:", product);
+        throw new Error("Product data missing fields");
+      }
+
+      return {
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: title,
+            images: [image],
+          },
+          unit_amount: Math.round(price * 100),
         },
-        unit_amount: Math.round(product.price * 100),
-      },
-      quantity: product.quantity,
-    }));
+        quantity: quantity,
+      };
+    });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -32,10 +47,13 @@ export const createCheckoutSession = async (req, res, next) => {
       cancel_url: `${client_domain}/user/payment/cancel`,
     });
 
+    console.log("sessionId====", session.id);
+
     res.json({ success: true, sessionId: session.id });
   } catch (error) {
+    console.error("Error creating checkout session:", error);
     res
       .status(error.statusCode || 500)
-      .json(error.message || "internal server error");
+      .json({ error: error.message || "Internal Server Error" });
   }
 };

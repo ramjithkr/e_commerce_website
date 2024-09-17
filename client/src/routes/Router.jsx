@@ -26,8 +26,10 @@ import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserHomePage } from "../pages/user/UserHomePage";
 import { RootHomePage } from "./../pages/root/RootHomePage";
 import { GetUsersList } from "../pages/admin/GetUsersList";
-import { HomeAdmin } from './../pages/admin/HomeAdmin';
+import { HomeAdmin } from "./../pages/admin/HomeAdmin";
 
+import { Cancel } from "../pages/payment/Cancel";
+import { Success } from "../pages/payment/Success";
 
 export const router = createBrowserRouter([
   {
@@ -99,6 +101,20 @@ export const router = createBrowserRouter([
         path: "cart",
         element: <CartPage />,
       },
+
+      {
+        path: "payment",
+        children: [
+          {
+            path: "success",
+            element: <Success />,
+          },
+          {
+            path: "cancel",
+            element: <Cancel />,
+          },
+        ],
+      },
     ],
   },
   {
@@ -115,7 +131,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "home",
-        element: <HomeAdmin/>,
+        element: <HomeAdmin />,
       },
 
       {
