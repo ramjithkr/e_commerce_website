@@ -69,7 +69,10 @@ export const CartPage = () => {
       await axiosInstance({
         url: `/cart/update/${productId}`,
         method: "PATCH",
-        data: { quantity: updatedCart.find((p) => p.product._id === productId).quantity },
+        data: {
+          quantity: updatedCart.find((p) => p.product._id === productId)
+            .quantity,
+        },
         withCredentials: true,
       });
     } catch (error) {
@@ -89,7 +92,7 @@ export const CartPage = () => {
   // Handle Payment
   const makePayment = async () => {
     try {
-      const stripePublishableKey = import.meta.env.VITE_STRIPE_Publishable_key;
+      const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
       if (!stripePublishableKey) {
         throw new Error("Stripe publishable key is not defined");
       }
