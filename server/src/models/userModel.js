@@ -37,13 +37,19 @@ const userSchema = new mongoose.Schema(
     product: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "product", // Wishlist should reference Product
+        ref: "Product", // Reference to Product model
       },
     ],
     cart: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Cart", // Cart should reference Cart items
+        ref: "Cart", // Reference to Cart model
+      },
+    ],
+    checkoutSessions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckoutSession", // Reference to CheckoutSession model
       },
     ],
   },

@@ -29,12 +29,12 @@ export const AdminDashboardHeader = () => {
           >
             Delete / update
           </Link>
-          <Link
-            to="/admin/"
+          {/* <Link
+            to="/admin/dashboard/user-orders"
             className="hover:text-gray-400 transition duration-200"
           >
             User Orders
-          </Link>
+          </Link> */}
         </div>
 
         {/* Mobile Hamburger Icon */}
