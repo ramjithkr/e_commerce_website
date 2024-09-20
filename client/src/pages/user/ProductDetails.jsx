@@ -51,7 +51,7 @@ export const ProductDetails = () => {
       if (response?.data?.message === "Product added to cart successfully") {
         setCartMessage("Product added to cart successfully!");
       } else {
-        setCartMessage("Failed to add product to cart");
+        setCartMessage("Product quntity has been increased sussfully!");
       }
     } catch (error) {
       console.error(error);
