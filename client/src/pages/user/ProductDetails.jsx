@@ -45,7 +45,7 @@ export const ProductDetails = () => {
         url: `/cart/add/${id}`,
         method: "POST",
         withCredentials: true,
-        data: { quantity },
+        data: { quantity:1 },
       });
 
       if (response?.data?.message === "Product added to cart successfully") {

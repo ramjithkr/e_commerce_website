@@ -67,7 +67,6 @@ export const addToWishlist = async (req, res) => {
     const user = req.user; // Assuming req.user contains the user object with email
     const productId = req.params.id; // Correctly extract the productId from req.params
 
-
     // Ensure the user is identified by their email
     const userExists = await User.findOne({ email: user.email });
     if (!userExists) {

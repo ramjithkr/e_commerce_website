@@ -44,7 +44,7 @@ export const CartPage = () => {
 
       if (response.status === 200) {
         setCartProduct((prev) =>
-          prev.filter((product) => product.product._id !== id)
+          prev.filter((product) => product.product._id.toString() !== id)
         );
       }
     } catch (error) {
@@ -55,21 +55,32 @@ export const CartPage = () => {
 
   const handleQuantityChange = async (id, change) => {
     try {
-      const currentItem = cartProduct.find(product => product.product._id === id);
+      const currentItem = cartProduct.find(
+        (product) => product.product._id.toString() === id
+      );
+      if (!currentItem) {
+        console.error("Item not found in cart for ID:", id);
+        return;
+      }
+
       const newQuantity = currentItem.quantity + change;
-  
-      // Prevent quantity from going below 1
-      if (newQuantity < 1) return;
-  
-      // Update local state
+
+      if (newQuantity < 1) {
+        await handleRemoveProduct(id);
+        return;
+      }
+
       const updatedCart = cartProduct.map((product) =>
-        product.product._id === id
+        product.product._id.toString() === id
           ? { ...product, quantity: newQuantity }
           : product
       );
+
       setCartProduct(updatedCart);
-  
-      // Update quantity on the server
+
+      // Log to check if the correct quantity is sent to the API
+      console.log(`Updating ${id} to new quantity: ${newQuantity}`);
+
       await axiosInstance({
         url: `/cart/update/${id}`,
         method: "PATCH",
@@ -81,11 +92,10 @@ export const CartPage = () => {
       setError("Failed to update quantity");
     }
   };
-  
 
   // Calculate Subtotal
   const subtotal = cartProduct.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + (item.product.price || 0) * item.quantity,
     0
   );
   const shipping = 4.99;
@@ -99,14 +109,12 @@ export const CartPage = () => {
         throw new Error("Stripe publishable key is not defined");
       }
 
-      // Initialize Stripe with the publishable key
       const stripe = await loadStripe(stripePublishableKey);
 
-      // Create a checkout session
       const response = await axiosInstance({
         url: "/payment/create-checkout-session",
         method: "POST",
-        data: { products: cartProduct }, // Sending cartProduct as products info
+        data: { products: cartProduct },
       });
 
       const sessionId = response?.data?.sessionId;
@@ -116,7 +124,6 @@ export const CartPage = () => {
         return;
       }
 
-      // Redirect to Stripe Checkout
       const result = await stripe.redirectToCheckout({ sessionId });
 
       if (result.error) {
