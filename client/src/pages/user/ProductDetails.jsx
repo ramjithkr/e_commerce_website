@@ -73,11 +73,11 @@ export const ProductDetails = () => {
       ) {
         setWishlistMessage("Product added to wishlist successfully!");
       } else {
-        setWishlistMessage("Failed to add product to wishlist");
+        setWishlistMessage("Failed to add product to wishlist ");
       }
     } catch (error) {
       console.error(error);
-      setWishlistMessage("Error adding product to wishlist");
+      setWishlistMessage("Product already in wishlist");
     }
   };
 

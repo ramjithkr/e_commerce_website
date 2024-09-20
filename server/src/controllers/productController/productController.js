@@ -155,10 +155,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
-
-
 // root hompage getRootProduct
-
 
 export const getRootProduct = async (req, res) => {
   try {
@@ -171,4 +168,4 @@ export const getRootProduct = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};

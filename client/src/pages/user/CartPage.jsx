@@ -53,26 +53,27 @@ export const CartPage = () => {
     }
   };
 
-  // Handle Quantity Change
-  const handleQuantityChange = async (productId, change) => {
+  const handleQuantityChange = async (id, change) => {
     try {
+      const currentItem = cartProduct.find(product => product.product._id === id);
+      const newQuantity = currentItem.quantity + change;
+  
+      // Prevent quantity from going below 1
+      if (newQuantity < 1) return;
+  
+      // Update local state
       const updatedCart = cartProduct.map((product) =>
-        product.product._id === productId
-          ? { ...product, quantity: product.quantity + change }
+        product.product._id === id
+          ? { ...product, quantity: newQuantity }
           : product
       );
-
-      // Update local state
       setCartProduct(updatedCart);
-
+  
       // Update quantity on the server
       await axiosInstance({
-        url: `/cart/update/${productId}`,
+        url: `/cart/update/${id}`,
         method: "PATCH",
-        data: {
-          quantity: updatedCart.find((p) => p.product._id === productId)
-            .quantity,
-        },
+        data: { quantity: newQuantity },
         withCredentials: true,
       });
     } catch (error) {
@@ -80,6 +81,7 @@ export const CartPage = () => {
       setError("Failed to update quantity");
     }
   };
+  
 
   // Calculate Subtotal
   const subtotal = cartProduct.reduce(

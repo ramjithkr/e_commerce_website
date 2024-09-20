@@ -144,3 +144,48 @@ export const removeCartItem = async (req, res) => {
     });
   }
 };
+
+
+export const updateCart = async (req, res) => {
+  const userD = req.user; // Ensure user is authenticated
+  const { quantity } = req.body;
+  const id = req.params.id; // Get product ID from the URL
+
+  try {
+    // Fetch the user and populate their cart
+    const user = await User.findOne({ email: userD.email }).populate('cart');
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+
+    // Find the user's cart
+    const cartData = await Cart.findOne({ user: user._id });
+
+    if (!cartData) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    // Log the cart items for debugging
+    console.log("User Cart:", cartData.items);
+
+    // Find the cart item to update
+    const cartItem = cartData.items.find(item => item.product.toString() === id);
+
+    if (!cartItem) {
+      return res.status(404).json({ message: "Item not found in cart" });
+    }
+
+    // Update the quantity
+    cartItem.quantity = quantity;
+
+    // Save the updated cart document
+    await cartData.save();
+
+    res.status(200).json({ message: "Cart updated successfully", cart: cartData.items });
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

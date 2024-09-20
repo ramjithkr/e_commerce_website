@@ -4,6 +4,7 @@ import {
   addProductToCart,
   getCartList,
   removeCartItem,
+  updateCart,
  
 } from "../../controllers/cartController/cartController.js";
 
@@ -15,6 +16,8 @@ router.post(`/add/:id`, authUser, addProductToCart);
 router.get("/cartdetails", authUser, getCartList);
 
 router.delete("/remove/:id", authUser, removeCartItem);
+
+router.patch("/update/:id", authUser, updateCart)
 
 // Additional routes...
 export default router;
