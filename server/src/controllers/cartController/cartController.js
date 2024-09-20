@@ -1,9 +1,7 @@
-
 import { Product } from "../../models/productModel.js";
 import mongoose from "mongoose";
 import { User } from "../../models/userModel.js";
 import { Cart } from "../../models/cartModel.js";
-
 
 export const addProductToCart = async (req, res) => {
   try {
@@ -102,13 +100,11 @@ export const getCartList = async (req, res) => {
   }
 };
 
-
-
-
-
 export const removeCartItem = async (req, res) => {
   const { id } = req.params; // Product ID to remove
   const loggedInUser = req.user; // Get the user from authentication middleware
+
+ 
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid product ID" });
@@ -122,13 +118,13 @@ export const removeCartItem = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Convert product ID to ObjectId
-    const productId = mongoose.Types.ObjectId(id);
+    // // Convert product ID to ObjectId
+    // const productId = mongoose.Types.ObjectId(id);
 
     // Find and update the cart by pulling the specific product from 'items' array
-    const updatedCart = await Cart.findOneAndUpdate(
+    const updatedCart = await Cart.findOneAndDelete(
       { user: user._id }, // Find the cart for the user
-      { $pull: { items: { product: productId } } }, // Remove the product from the 'items' array
+      { $pull: { items: { product: id } } }, // Remove the product from the 'items' array
       { new: true } // Return the updated document
     );
 
@@ -144,7 +140,7 @@ export const removeCartItem = async (req, res) => {
     console.error("Error removing product:", error);
     return res.status(500).json({
       error: "Failed to remove product from cart",
-      details: error.message // Include error message for better debugging
+      details: error.message, // Include error message for better debugging
     });
   }
 };
