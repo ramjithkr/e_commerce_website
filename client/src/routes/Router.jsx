@@ -30,6 +30,7 @@ import { HomeAdmin } from "./../pages/admin/HomeAdmin";
 
 import { Cancel } from "../pages/payment/Cancel";
 import { Success } from "../pages/payment/Success";
+import { OdearDetails } from "../pages/user/OdearDeatils";
 
 export const router = createBrowserRouter([
   {
@@ -96,7 +97,12 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <UserProfile />,
+      },  {
+        path: "odeardetails",
+        element: <OdearDetails />,
       },
+      
+      
       {
         path: "cart",
         element: <CartPage />,

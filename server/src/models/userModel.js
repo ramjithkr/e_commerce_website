@@ -46,10 +46,10 @@ const userSchema = new mongoose.Schema(
         ref: "Cart", // Reference to Cart model
       },
     ],
-    checkoutSessions: [
+    session : [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "CheckoutSession", // Reference to CheckoutSession model
+        ref: " session ", // Reference to CheckoutSession model
       },
     ],
   },

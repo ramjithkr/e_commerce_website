@@ -4,6 +4,7 @@ import { generateUserToken } from "../../utils/generateToken.js";
 import { cloudinaryInstance } from "../../config/cloudneryConfig.js";
 
 import { User } from "./../../models/userModel.js";
+import { Session } from "./../../models/sectionModel.js";
 
 export const userCreate = async (req, res) => {
   try {
@@ -164,6 +165,58 @@ export const userLogout = (req, res) => {
     });
     return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error!!!" });
+  }
+};
+
+export const seasonOdearDetails = async (req, res) => {
+  try {
+    const user = req.user; // Assumes authUser middleware sets req.user
+    const userData = await User.findOne({ email: user.email });
+
+    if (!userData) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Fetch the user's order and populate the product details
+    const order = await Session.findOne({ user: userData._id })
+      .populate({
+        path: 'products.product', // Populate the product details
+        select: 'image title price' // Select only the required fields
+      });
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    // Calculate total price
+    const totalPrice = order.products.reduce((total, item) => {
+      return total + item.product.price * item.quantity;
+    }, 0);
+
+    // Format the response to include product details and total price
+    const response = {
+      sessionId: order.sessionId,
+      products: order.products.map(item => ({
+        img: item.product.image,
+        title: item.product.title,
+        price: item.product.price,
+        quantity: item.quantity,
+        totalProductPrice: item.product.price * item.quantity
+      })),
+      totalPrice: totalPrice,
+      currency: order.currency,
+      payment_status: order.payment_status,
+    };
+
+    // Return the order details
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching order:", error);
     res
       .status(500)
       .json({ success: false, message: "Internal server error!!!" });
