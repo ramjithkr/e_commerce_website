@@ -177,15 +177,16 @@ export const seasonOdearDetails = async (req, res) => {
     const userData = await User.findOne({ email: user.email });
 
     if (!userData) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // Fetch the user's order and populate the product details
-    const order = await Session.findOne({ user: userData._id })
-      .populate({
-        path: 'products.product', // Populate the product details
-        select: 'image title price' // Select only the required fields
-      });
+    const order = await Session.findOne({ user: userData._id }).populate({
+      path: "products.product", // Populate the product details
+      select: "image title price", // Select only the required fields
+    });
 
     if (!order) {
       return res
@@ -201,12 +202,12 @@ export const seasonOdearDetails = async (req, res) => {
     // Format the response to include product details and total price
     const response = {
       sessionId: order.sessionId,
-      products: order.products.map(item => ({
+      products: order.products.map((item) => ({
         img: item.product.image,
         title: item.product.title,
         price: item.product.price,
         quantity: item.quantity,
-        totalProductPrice: item.product.price * item.quantity
+        totalProductPrice: item.product.price * item.quantity,
       })),
       totalPrice: totalPrice,
       currency: order.currency,

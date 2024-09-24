@@ -31,30 +31,30 @@ const userSchema = new mongoose.Schema(
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Wishlist", // Reference to Wishlist model
+        ref: "Wishlist", 
       },
     ],
     product: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product", // Reference to Product model
+        ref: "Product", 
       },
     ],
     cart: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Cart", // Reference to Cart model
+        ref: "Cart",
       },
     ],
     session : [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: " session ", // Reference to CheckoutSession model
+        ref: " session ", 
       },
     ],
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 

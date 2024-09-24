@@ -17,7 +17,7 @@ export const AdminLoginPage = () => {
 
       if (response && response.success) {
         toast.success("Successfully logged in as Admin");
-        navigate("/admin/home"); // Single toast message
+        navigate("/admin/home"); 
       } else {
         toast.error(response?.message || "Admin Login failed");
       }

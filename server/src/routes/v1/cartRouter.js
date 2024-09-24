@@ -19,5 +19,5 @@ router.delete("/remove/:id", authUser, removeCartItem);
 
 router.patch("/update/:id", authUser, updateCart)
 
-// Additional routes...
+
 export default router;

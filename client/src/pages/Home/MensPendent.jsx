@@ -64,8 +64,8 @@ export const UserMensPendent = () => {
               onClick={() => handleImageClick(product.image)} // Handle click for double-tap
             >
               <img
-                src={product.image} // Use the image URL from the product
-                alt={product.title} // Use the title from the product for accessibility
+                src={product.image} 
+                alt={product.title} 
                 className="w-full h-80 object-cover rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               />
               {/* Button */}

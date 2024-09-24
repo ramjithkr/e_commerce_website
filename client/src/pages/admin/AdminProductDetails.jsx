@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export const AdminProductDetails = () => {
   const [productDetails, setProductDetails] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   const { id } = useParams();
 
@@ -26,7 +26,7 @@ export const AdminProductDetails = () => {
         console.error(error);
         setError("Failed to fetch product details");
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 

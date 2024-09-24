@@ -39,13 +39,14 @@ export const ProductDetails = () => {
   }, [id]);
 
   // Add product to the user's cart
+  
   const addProductToUserCart = async () => {
     try {
       const response = await axiosInstance({
         url: `/cart/add/${id}`,
         method: "POST",
         withCredentials: true,
-        data: { quantity:1 },
+        data: { quantity: 1 },
       });
 
       if (response?.data?.message === "Product added to cart successfully") {

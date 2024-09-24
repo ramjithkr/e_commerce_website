@@ -121,7 +121,7 @@ export const RootMensBracelete = () => {
         method: "GET",
         withCredentials: true,
       });
-      setProducts(response?.data?.data || []); // Ensure products is always an array
+      setProducts(response?.data?.data || []);
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch products");
@@ -142,7 +142,7 @@ export const RootMensBracelete = () => {
     const tapDelay = 300; // Time in milliseconds to consider as a double-tap
 
     if (currentTime - lastTap < tapDelay) {
-      // Handle double-tap
+     
       setSelectedImage(imageUrl);
       setIsModalOpen(true);
     }
@@ -164,11 +164,11 @@ export const RootMensBracelete = () => {
             <div
               key={product._id}
               className="relative flex-shrink-0 w-96 cursor-pointer group"
-              onClick={() => handleImageClick(product.image)} // Handle click for double-tap
+              onClick={() => handleImageClick(product.image)}
             >
               <img
-                src={product.image} // Use the image URL from the product
-                alt={product.title} // Use the title from the product for accessibility
+                src={product.image} 
+                alt={product.title} 
                 className="w-full h-80 object-cover rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               />
               {/* Button */}

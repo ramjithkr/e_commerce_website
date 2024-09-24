@@ -56,7 +56,7 @@ export const CrudProduct = () => {
 
   const handleDeleteConfirmation = (productId) => {
     setDeletingProduct(productId);
-    setDeleteError(null); // Clear any previous errors
+    setDeleteError(null); 
   };
 
   const handleConfirmDelete = () => {
@@ -79,7 +79,7 @@ export const CrudProduct = () => {
           <CrudProductCards
             key={product._id}
             product={product}
-            onDelete={() => handleDeleteConfirmation(product._id)} // Pass delete function
+            onDelete={() => handleDeleteConfirmation(product._id)}
           />
         ))}
       </div>

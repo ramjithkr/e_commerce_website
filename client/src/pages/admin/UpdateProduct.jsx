@@ -37,8 +37,8 @@ export const UpdateProduct = () => {
           setValue("category", category);
           setValue("stock", stock);
           setValue("ratings", ratings);
-          setCurrentImage(image); // Set current image URL
-          setCurrentName(title);  // Set current product title
+          setCurrentImage(image); 
+          setCurrentName(title);  
         }
       } catch (error) {
         console.error(error);

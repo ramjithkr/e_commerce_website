@@ -143,8 +143,6 @@ export const removeCartItem = async (req, res) => {
   }
 };
 
-
-
 export const updateCart = async (req, res) => {
   const userD = req.user; // Ensure user is authenticated
   const { quantity } = req.body;
