@@ -4,7 +4,7 @@ import { generateUserToken } from "../../utils/generateToken.js";
 import { cloudinaryInstance } from "../../config/cloudneryConfig.js";
 
 import { User } from "./../../models/userModel.js";
-import { Session } from "./../../models/sectionModel.js";
+import { Session } from "../../models/sectionModel.js";
 
 export const userCreate = async (req, res) => {
   try {
@@ -171,6 +171,8 @@ export const userLogout = (req, res) => {
   }
 };
 
+
+
 export const seasonOdearDetails = async (req, res) => {
   try {
     const user = req.user; // Assumes authUser middleware sets req.user
@@ -223,3 +225,4 @@ export const seasonOdearDetails = async (req, res) => {
       .json({ success: false, message: "Internal server error!!!" });
   }
 };
+

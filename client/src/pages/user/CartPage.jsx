@@ -98,7 +98,7 @@ export const CartPage = () => {
     (sum, item) => sum + (item.product.price || 0) * item.quantity,
     0
   );
-  const shipping = 4.99;
+  const shipping = 50;
   const total = subtotal + shipping;
 
   // Handle Payment
@@ -193,7 +193,7 @@ export const CartPage = () => {
                       </span>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <p className="text-sm">${product.product.price}</p>
+                      <p className="text-sm">₹{product.product.price}</p>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -223,16 +223,16 @@ export const CartPage = () => {
         <div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
           <div className="mb-2 flex justify-between">
             <p className="text-gray-700">Subtotal</p>
-            <p className="text-gray-700">${subtotal.toFixed(2)}</p>
+            <p className="text-gray-700">₹{subtotal.toFixed(2)}</p>
           </div>
           <div className="flex justify-between">
             <p className="text-gray-700">Shipping</p>
-            <p className="text-gray-700">${shipping.toFixed(2)}</p>
+            <p className="text-gray-700">₹{shipping.toFixed(2)}</p>
           </div>
           <hr className="my-4" />
           <div className="flex justify-between">
             <p className="text-lg font-bold">Total</p>
-            <p className="text-lg font-bold">${total.toFixed(2)} USD</p>
+            <p className="text-lg font-bold"> ₹{total.toFixed(2)} INR</p>
           </div>
           <button
             onClick={makePayment}

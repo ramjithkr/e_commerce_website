@@ -29,12 +29,12 @@ export const AdminDashboardHeader = () => {
           >
             Delete / update
           </Link>
-          {/* <Link
-            to="/admin/dashboard/user-orders"
-            className="hover:text-gray-400 transition duration-200"
+          <Link
+            to="/admin/dashboard/user-oders"
+            className="block text-white py-2 hover:bg-gray-600 rounded transition duration-200"
           >
             User Orders
-          </Link> */}
+          </Link>
         </div>
 
         {/* Mobile Hamburger Icon */}
@@ -81,10 +81,10 @@ export const AdminDashboardHeader = () => {
           Delete Product
         </Link>
         <Link
-          to="/admin/dashboard/update-user-orders"
+          to="/admin/dashboard/user-oders"
           className="block text-white py-2 hover:bg-gray-600 rounded transition duration-200"
         >
-          Update User Orders
+          User Orders
         </Link>
       </div>
     </nav>

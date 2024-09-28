@@ -20,17 +20,16 @@ import { CartPage } from "../pages/user/CartPage";
 import { AdminProductDetails } from "../pages/admin/AdminProductDetails";
 import { AdminDashboardLayout } from "../layouts/AdminDashboardLayout";
 import { CrudProduct } from "../pages/admin/CrudProduct";
-import { UpadteOders } from "../pages/admin/UpadteOders";
 import { UpdateProduct } from "../pages/admin/UpdateProduct";
 import { WishlistPage } from "../pages/user/WishlistPage";
 import { UserHomePage } from "../pages/user/UserHomePage";
 import { RootHomePage } from "./../pages/root/RootHomePage";
 import { GetUsersList } from "../pages/admin/GetUsersList";
 import { HomeAdmin } from "./../pages/admin/HomeAdmin";
-
 import { Cancel } from "../pages/payment/Cancel";
 import { Success } from "../pages/payment/Success";
 import { OdearDetails } from "../pages/user/OdearDeatils";
+import { AdminOdearDetails } from "../pages/admin/AdminOdearDetails";
 
 export const router = createBrowserRouter([
   {
@@ -166,8 +165,8 @@ export const router = createBrowserRouter([
             element: <CrudProduct />,
           },
           {
-            path: "update-user-oders",
-            element: <UpadteOders />, ///  not complete
+            path: "user-oders",
+            element:<AdminOdearDetails/>
           },
           {
             path: "update-product/:id",

@@ -21,6 +21,11 @@ const sessionSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      status: {
+        type: String,
+        enum: ["processing", "shipped", "delivered", "canceled"],
+        default: "processing", // Default status for individual products
+      },
     },
   ],
   amount_total: {
@@ -34,7 +39,12 @@ const sessionSchema = new mongoose.Schema({
   payment_status: {
     type: String,
     enum: ["pending", "completed", "canceled"],
-    default: "pending",
+    default: "completed",
+  },
+  status: {
+    type: String,
+    enum: ["processing", "shipped", "delivered", "canceled"],
+    default: "processing",
   },
   createdAt: {
     type: Date,
@@ -45,5 +55,6 @@ const sessionSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
 
 export const Session = mongoose.model("Session", sessionSchema);

@@ -4,6 +4,7 @@ import { Admin } from "../../models/adminModels.js";
 import { generateAdminToken } from "./../../utils/genreateAdminToken.js";
 import { User } from "./../../models/userModel.js";
 import { Product } from "../../models/productModel.js";
+import { Session } from "../../models/sectionModel.js";
 
 export const adminCreate = async (req, res) => {
   try {
@@ -292,7 +293,6 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params;
     const admin = req.admin;
 
-   
     if (admin.email !== "ramjithkr5441@gmail.com") {
       return res.status(403).json({
         success: false,
@@ -321,5 +321,75 @@ export const deleteUser = async (req, res) => {
       success: false,
       message: "Internal server error",
     });
+  }
+};
+
+export const getAllUserOrders = async (req, res) => {
+  try {
+    const users = await User.find(); // Fetch all users
+
+    if (!users || users.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Users not found" });
+    }
+
+    const allOrders = await Promise.all(
+      users.map(async (user) => {
+        const orders = await Session.find({ user: user._id }).populate({
+          path: "products.product", // Populate the product details
+          select: "image title price", // Select only the required fields
+        });
+
+        if (!orders || orders.length === 0) {
+          return null; // Return null for users with no orders
+        }
+
+        // Map over orders to format them
+        const formattedOrders = orders.map((order) => {
+          const totalPrice = order.products.reduce((total, item) => {
+            return total + item.product.price * item.quantity;
+          }, 0);
+
+          return {
+            sessionId: order.sessionId,
+            products: order.products.map((item) => ({
+              img: item.product.image,
+              title: item.product.title,
+              price: item.product.price,
+              quantity: item.quantity,
+              status: item.status, // Individual product status
+              totalProductPrice: item.product.price * item.quantity,
+            })),
+            totalPrice: totalPrice,
+            currency: order.currency,
+            payment_status: order.payment_status,
+            createdAt: order.createdAt,
+            updatedAt: order.updatedAt,
+            user: {
+              id: user._id,
+              name: user.name,
+              email: user.email,
+              // Add more fields if needed
+            },
+          };
+        });
+
+        return formattedOrders;
+      })
+    );
+
+    const flattenedOrders = allOrders.flat().filter((order) => order !== null); // Remove null entries and flatten
+
+    if (flattenedOrders.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No orders found" });
+    }
+
+    res.status(200).json({ success: true, data: flattenedOrders });
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
