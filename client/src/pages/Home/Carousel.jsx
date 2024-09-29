@@ -49,7 +49,7 @@ export const Carousel = () => {
         </div>
         <div id="item2" className="carousel-item w-full h-full">
           <img
-            src="https://img.freepik.com/free-photo/three-black-ducks_23-2147680069.jpg?w=996&t=st=1726074332~exp=1726074932~hmac=964400ee42b6b551bc6b4c68442177083034cd8b4167a7eb1a3b115e0abf743a"
+            src="https://www.blackmambajewellery.com/cdn/shop/files/Capture154152copy_1100x.jpg?v=1721419978"
             className="w-full h-full object-cover"
             alt="Slide 2"
           />
