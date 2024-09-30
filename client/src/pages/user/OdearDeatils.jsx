@@ -5,20 +5,20 @@ import { axiosInstance } from "../../config/axiosInstance";
 export const OdearDetails = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axiosInstance({
-          url: `/user/odear/${id}`, 
+          url: `/user/odear/${id}`,
           method: "GET",
           withCredentials: true,
         });
 
         if (response?.data) {
-          setOrderDetails(response.data); 
+          setOrderDetails(response.data);
         } else {
           setError("Order details not found");
         }
@@ -26,7 +26,7 @@ export const OdearDetails = () => {
         console.error("Error fetching order details:", error);
         setError(" No order details available");
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -35,7 +35,7 @@ export const OdearDetails = () => {
 
   if (loading) return <div className="text-center py-6">Loading...</div>;
   if (error)
-    return <div className="text-center text-red-500 py-6">{error}</div>; 
+    return <div className="text-center text-red-500 py-6">{error}</div>;
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
@@ -71,7 +71,8 @@ export const OdearDetails = () => {
                     <strong>Quantity:</strong> {product.quantity}
                   </p>
                   <p className="text-gray-600">
-                    <strong>Status:</strong>{product.status}
+                    <strong>Status: Processing</strong>
+                    {/* {product.status} */}
                   </p>
                 </div>
               </div>
